@@ -1,13 +1,13 @@
-public abstract class Car extends Thread {
-	private int points;
+public abstract class Car implements Runnable {
+	private int points = 0;
 	private Point pos;
 	private int ori;
 	private DrivingArea area;
 	private Strategy strategy;
 	private int waitms;
 
-	public Car(int points, Point initPos, int initOri, DrivingArea area,
-			Strategy strategy, int waitms) {
+	public Car(Point initPos, int initOri, DrivingArea area, Strategy strategy,
+			int waitms) {
 
 	}
 
