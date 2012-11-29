@@ -1,13 +1,18 @@
 public abstract class Car extends Thread {
 	private DrivingArea area;
 	private int points = 0;
-	private Point pos;
-	private int ori;
+	/*private Point pos;
+	private int ori;*/
+	private CarPosition cp;
 	private Strategy<? extends Move> strategy;
 	private int waitms;
 
-	public Car(DrivingArea area, Point initPos, int initOri, Strategy<? extends Move> strategy, int waitms) {
-
+	//public Car(DrivingArea area, Point initPos, int initOri, Strategy<? extends Move> strategy, int waitms) {
+	public Car(DrivingArea area, CarPosition cp, Strategy<? extends Move> strategy, int waitms) {
+		this.area = area;
+		this.cp = cp;
+		this.strategy = strategy;
+		this.waitms = waitms;		
 	}
 	
 	@Override
@@ -17,7 +22,7 @@ public abstract class Car extends Thread {
 
 	@Override
 	public void run() {
-
+		while(points < 10 && )
 	}
 
 	/**

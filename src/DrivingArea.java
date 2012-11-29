@@ -1,6 +1,4 @@
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class DrivingArea {
 	private Map<Point, Set<Car>> positions = new HashMap<Point, Set<Car>>();
@@ -8,11 +6,22 @@ public class DrivingArea {
 	private int height;
 
 	public DrivingArea(int width, int height) {
-		
+		this.width = width;
+		this.height = height;
 	}
 	
-	public void add(Car car) {
-		
+	public void add(Car car, CarPosition cp) {
+		Set<Car> cs;
+		if((cs = positions.get(cp.getPoint())) != null)
+		{
+			cs.add(car);
+		}
+		else
+		{
+			cs = Collections.synchronizedSet(new TreeSet<Car>());
+			cs.add(car);
+			positions.put(cp.getPoint(), cs);			
+		}
 	}
 	
 	/**

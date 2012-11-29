@@ -16,7 +16,17 @@ public class CircleStrategy extends Strategy<FastMove> {
 
 	private CircleStrategy(LinkedList<FastMove> list, int size) {
 		super(list);
-
+		ForwardLeftMove flm = new ForwardLeftMove();
+		ForwardMove fwd = new ForwardMove();
+		
+		for(int i = 0; i < 4; i++)
+		{
+			for(int j = 0; j < size; j++)
+			{
+				list.add(fwd);
+			}
+			list.add(flm);
+		}
 		// setze die moves so:
 		// (FL)FF...F (#F = size)
 	}

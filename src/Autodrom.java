@@ -9,16 +9,17 @@ public class Autodrom {
 	private DrivingArea area;
 
 	public Autodrom(int width, int height) {
+		this.area = new DrivingArea(width, height);
 	}
 
 	public void addCar(CarFactory factory) {
-
+		factory.create(area);
 	}
 
 	/**
 	 * Blockiert bis die Runde beendet wurde.
 	 */
 	public void start() {
-
+		
 	}
 }
