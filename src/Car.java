@@ -1,17 +1,18 @@
 public abstract class Car extends Thread {
+	private DrivingArea area;
 	private int points = 0;
 	private Point pos;
 	private int ori;
-	private Autodrom.DrivingArea area;
 	private Strategy strategy;
 	private int waitms;
 
-	public Car(Point initPos, int initOri, Strategy strategy, int waitms) {
+	public Car(DrivingArea area, Point initPos, int initOri, Strategy strategy, int waitms) {
 
 	}
-
-	public void set(Autodrom.DrivingArea area) {
-
+	
+	@Override
+	public void start() {
+		
 	}
 
 	@Override
