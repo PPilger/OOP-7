@@ -1,8 +1,13 @@
 import java.util.LinkedList;
 
-
+/**
+ * Laesst ein Auto in einem Achter fahren.
+ */
 public class EightStrategy extends Strategy<FlexibleMove> {
 	
+	/**
+	 * Erstellt eine Achter fahr Strategie.
+	 */
 	public EightStrategy() {
 		this(new LinkedList<FlexibleMove>());
 	}
