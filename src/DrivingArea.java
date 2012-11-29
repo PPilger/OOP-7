@@ -30,7 +30,14 @@ public class DrivingArea {
 	 * @return die Menge der getroffenen Autos oder null, wenn die neue Position
 	 *         ausserhalb des gueltigen Bereichs liegt.
 	 */
-	public Set<Car> update(Point oldPos, Car car) {
+	public Set<Car> update(Point oldPos, Point newPos, Car car) {
+		int x = newPos.getX(), y = newPos.getY();
+		if( x < 0 || y < 0 || x > this.width || y > this.height)
+		{
+			return null;
+		}//TODO
+		
+		
 		return null;
 	}
 

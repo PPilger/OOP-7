@@ -6,6 +6,9 @@ public abstract class Car extends Thread {
 	private CarPosition cp;
 	private Strategy<? extends Move> strategy;
 	private int waitms;
+	//maximum amount of moves
+	private int maxPath = Integer.MAX_VALUE;
+	private int movedCnt = 0;
 
 	//public Car(DrivingArea area, Point initPos, int initOri, Strategy<? extends Move> strategy, int waitms) {
 	public Car(DrivingArea area, CarPosition cp, Strategy<? extends Move> strategy, int waitms) {
@@ -22,7 +25,26 @@ public abstract class Car extends Thread {
 
 	@Override
 	public void run() {
-		while(points < 10 && )
+
+		try {
+		while(points < 10 && movedCnt < maxPath)
+		{
+			//move car
+			Move mv;
+			mv = strategy.nextMove();
+			
+			while (this.area.update(this.cp.getPoint(), mv.nextPos(cp).getPoint(), this) == null)
+			{
+				//get alternative move, if it was invalid
+			}
+			
+			movedCnt++;
+			wait(waitms);			
+		}
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 	}
 
 	/**
