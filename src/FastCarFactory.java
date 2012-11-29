@@ -1,10 +1,11 @@
-
 public class FastCarFactory implements CarFactory {
 	private Point initPos;
 	private int initOri;
-	private FastStrategy strategy;
+	private Strategy<FastMove> strategy;
+	private int waitms;
 
-	public FastCarFactory(Point initPos, int initOri, FastStrategy strategy) {
+	public FastCarFactory(Point initPos, int initOri,
+			Strategy<FastMove> strategy, int waitms) {
 	}
 
 	@Override

@@ -1,7 +1,8 @@
 public class FlexibleCar extends Car {
 
-	public FlexibleCar(DrivingArea area, Point initPos, int initOri, FlexibleStrategy strategy) {
-		super(area, initPos, initOri, strategy, 200);
+	public FlexibleCar(DrivingArea area, Point initPos, int initOri,
+			Strategy<FlexibleMove> strategy, int waitms) {
+		super(area, initPos, initOri, strategy, waitms);
 	}
 
 }

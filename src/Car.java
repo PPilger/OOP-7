@@ -3,10 +3,10 @@ public abstract class Car extends Thread {
 	private int points = 0;
 	private Point pos;
 	private int ori;
-	private Strategy strategy;
+	private Strategy<? extends Move> strategy;
 	private int waitms;
 
-	public Car(DrivingArea area, Point initPos, int initOri, Strategy strategy, int waitms) {
+	public Car(DrivingArea area, Point initPos, int initOri, Strategy<? extends Move> strategy, int waitms) {
 
 	}
 	
