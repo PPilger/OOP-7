@@ -18,6 +18,9 @@ public abstract class Car extends Thread {
 		this.waitms = waitms;		
 	}
 	
+	public int getOrientation()
+	{return this.cp.getOrientation();}
+	
 	@Override
 	public void start() {
 		
@@ -33,9 +36,17 @@ public abstract class Car extends Thread {
 			Move mv;
 			mv = strategy.nextMove();
 			
-			while (this.area.update(this.cp.getPoint(), mv.nextPos(cp).getPoint(), this) == null)
+			for(CarUpdate cu : this.area.update(this.cp.getPoint(), mv.nextPos(cp).getPoint(), this))
 			{
-				//get alternative move, if it was invalid
+				//frontal crash
+				if(cu.getorientation() == (this.getOrientation() + 2) % 4)
+				{
+					this.points++;
+				}
+				else
+				{
+					cu.getCar().hit(this);
+				}
 			}
 			
 			movedCnt++;
@@ -52,7 +63,7 @@ public abstract class Car extends Thread {
 	 * die Punkte des anderen, wenn dieser von hinten getroffen wird.
 	 */
 	public void hit(Car other) {
-
+		this.points--;
 	}
 
 	@Override

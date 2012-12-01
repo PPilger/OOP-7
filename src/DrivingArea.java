@@ -30,15 +30,24 @@ public class DrivingArea {
 	 * @return die Menge der getroffenen Autos oder null, wenn die neue Position
 	 *         ausserhalb des gueltigen Bereichs liegt.
 	 */
-	public Set<Car> update(Point oldPos, Point newPos, Car car) {
+	public Set<CarUpdate> update(Point oldPos, Point newPos, Car car) {
 		int x = newPos.getX(), y = newPos.getY();
 		if( x < 0 || y < 0 || x > this.width || y > this.height)
 		{
-			return null;
+			Point secPt = fixPos(newPos);
+			//this.update(oldPos, secPt, car);
+			return new TreeSet<CarUpdate>();
 		}//TODO
 		
-		
-		return null;
+		this.positions.get(oldPos).remove(car);
+		Set<Car> tmp = this.positions.get(newPos);
+		TreeSet<CarUpdate> hit = new TreeSet<CarUpdate>();
+		for(Car c : tmp)
+		{
+			hit.add(new CarUpdate(c,c.getOrientation()));
+		}
+		tmp.add(car);
+		return hit;
 	}
 
 	public Point fixPos(Point pos) {
