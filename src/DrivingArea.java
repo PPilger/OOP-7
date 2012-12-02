@@ -18,7 +18,7 @@ public class DrivingArea {
 		}
 		else
 		{
-			cs = Collections.synchronizedSet(new TreeSet<Car>());
+			cs = Collections.synchronizedSet(new LinkedHashSet<Car>());
 			cs.add(car);
 			positions.put(cp.getPoint(), cs);			
 		}
@@ -36,12 +36,12 @@ public class DrivingArea {
 		{
 			Point secPt = fixPos(newPos);
 			//this.update(oldPos, secPt, car);
-			return new TreeSet<CarUpdate>();
+			return new LinkedHashSet<CarUpdate>();
 		}//TODO
 		
 		this.positions.get(oldPos).remove(car);
 		Set<Car> tmp = this.positions.get(newPos);
-		TreeSet<CarUpdate> hit = new TreeSet<CarUpdate>();
+		LinkedHashSet<CarUpdate> hit = new LinkedHashSet<CarUpdate>();
 		for(Car c : tmp)
 		{
 			hit.add(new CarUpdate(c,c.getOrientation()));

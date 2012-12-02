@@ -29,18 +29,5 @@ public class LeftMove implements FlexibleMove {
 		retPt = new Point(x, y);
 		
 		return new CarPosition(retPt, ori);
-	}
-
-	/*@Override
-	public Point nextPos(Point pos, int ori) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int nextOri(int ori) {
-		// TODO Auto-generated method stub
-		return 0;
-	}*/
-
+	}	
 }
