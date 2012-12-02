@@ -1,15 +1,15 @@
 
 // Verwende Left und Forward um Code wiederzuverwenden!
 public class ForwardLeftMove implements FastMove {
+	private ForwardMove forwardMove = new ForwardMove();
+	private LeftMove leftMove = new LeftMove();
 
 	@Override
 	public CarPosition nextPos(CarPosition cp) {
-		ForwardMove fmv = new ForwardMove();
-		LeftMove lmv = new LeftMove();
 		CarPosition retPos = cp;
 		
-		retPos = fmv.nextPos(retPos);
-		retPos = lmv.nextPos(retPos);
+		retPos = forwardMove.nextPos(retPos);
+		retPos = leftMove.nextPos(retPos);
 		
 		return retPos;
 	}
