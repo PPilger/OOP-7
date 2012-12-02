@@ -1,19 +1,6 @@
 
 public class RightMove implements FlexibleMove {
 
-	/*
-	@Override
-	public Point nextPos(Point pos, int ori) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int nextOri(int ori) {
-		// TODO Auto-generated method stub
-		return 0;
-	}*/
-
 	@Override
 	public CarPosition nextPos(CarPosition cp) {
 		int x = cp.getPoint().getX(), y = cp.getPoint().getY(), ori = cp.getOrientation();

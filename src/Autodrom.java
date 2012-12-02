@@ -1,6 +1,6 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
+import com.sun.org.apache.xalan.internal.xsltc.compiler.util.Util;
 /**
  * Stellt ein Autodrom dar. 
  */
@@ -20,6 +20,37 @@ public class Autodrom {
 	 * Blockiert bis die Runde beendet wurde.
 	 */
 	public void start() {
+		
+		
+		for(Car c: cars)
+		{
+			c.start();
+		}
+		
+		boolean finished = false;
+		
+		try {
+			
+		while(!finished)
+		{
+			
+			
+			finished = true;
+			for(Car c : cars)
+			{
+				if(c.isAlive())
+				{
+					finished = false;
+					break;
+				}
+			}
+		}
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
+		System.out.print("RUnde Ferti ;-)");
 		
 	}
 }
