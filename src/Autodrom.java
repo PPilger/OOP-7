@@ -4,7 +4,7 @@ import com.sun.org.apache.xalan.internal.xsltc.compiler.util.Util;
 /**
  * Stellt ein Autodrom dar. 
  */
-public class Autodrom {
+public class Autodrom extends Thread{
 	private List<Car> cars = new ArrayList<Car>();
 	private DrivingArea area;
 
@@ -19,7 +19,7 @@ public class Autodrom {
 	/**
 	 * Blockiert bis die Runde beendet wurde.
 	 */
-	public void start() {
+	public void run() {
 		
 		
 		for(Car c: cars)
@@ -29,7 +29,6 @@ public class Autodrom {
 		
 		boolean finished = false;
 		
-		try {
 			
 		while(!finished)
 		{
@@ -45,10 +44,6 @@ public class Autodrom {
 				}
 			}
 		}
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		
 		System.out.print("RUnde Ferti ;-)");
 		

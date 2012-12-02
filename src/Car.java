@@ -20,11 +20,6 @@ public abstract class Car extends Thread {
 	
 	public int getOrientation()
 	{return this.cp.getOrientation();}
-	
-	@Override
-	public void start() {
-		
-	}
 
 	@Override
 	public void run() {
@@ -34,9 +29,14 @@ public abstract class Car extends Thread {
 		{
 			//move car
 			Move mv;
-			mv = strategy.nextMove();
+			mv = strategy.nextMove();		
+			Point oldPt = this.cp.getPoint();
+			CarPosition nextPos = mv.nextPos(cp);
+			nextPos = new CarPosition(area.fixPos(nextPos.getPoint()), nextPos.getOrientation());
+			//update its position
+			this.cp = nextPos;
 			
-			for(CarUpdate cu : this.area.update(this.cp.getPoint(), mv.nextPos(cp).getPoint(), this))
+			for(CarUpdate cu : this.area.update(oldPt, nextPos.getPoint(), this))
 			{
 				//frontal crash
 				if(cu.getorientation() == (this.getOrientation() + 2) % 4)
@@ -49,6 +49,8 @@ public abstract class Car extends Thread {
 				}
 			}
 			
+			
+			
 			movedCnt++;
 			wait(waitms);			
 		}
@@ -59,8 +61,8 @@ public abstract class Car extends Thread {
 	}
 
 	/**
-	 * Erhoeht die Punkte um 1 bzw. 2 bei einem frontalen Aufprall. Reduziert
-	 * die Punkte des anderen, wenn dieser von hinten getroffen wird.
+	 * Decreases points of this car by one
+	 * @param other the car by which this one was hit
 	 */
 	public void hit(Car other) {
 		this.points--;
@@ -68,6 +70,15 @@ public abstract class Car extends Thread {
 
 	@Override
 	public String toString() {
-		return null;
+		StringBuilder sb = new StringBuilder();
+		sb.append("Car [ThreadID: ");
+		sb.append(this.getId());
+		sb.append("; ");
+		sb.append(cp);
+		sb.append("; MoveCnt: ");
+		sb.append(this.movedCnt);
+		sb.append("; Points: ");
+		sb.append(this.points);
+		return sb.toString();
 	}
 }

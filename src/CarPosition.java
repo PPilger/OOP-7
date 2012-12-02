@@ -46,4 +46,15 @@ public class CarPosition {
 	{
 		return ori;
 	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Postitnullion [ ");
+		sb.append(this.pt);
+		sb.append("] Orientation [);");
+		sb.append(this.ori);
+		sb.append("]");
+		return sb.toString();
+	}
 }
