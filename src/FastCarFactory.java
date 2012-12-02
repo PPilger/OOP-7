@@ -4,8 +4,7 @@
  *
  */
 public class FastCarFactory implements CarFactory {
-	/*private Point initPos;
-	private int initOri;*/
+
 	private CarPosition cp;
 	private Strategy<FastMove> strategy;
 	private int waitms;
@@ -17,10 +16,6 @@ public class FastCarFactory implements CarFactory {
 	 * @param strategy
 	 * @param waitms Time between position changement
 	 */
-	/*public FastCarFactory(Point initPos, int initOri,
-			Strategy<FastMove> strategy, int waitms) {
-		this.initPos = initPos;
-		this.initOri = initOri;*/
 	public FastCarFactory(CarPosition cp,
 			Strategy<FastMove> strategy, int waitms) {
 		this.cp = cp;
