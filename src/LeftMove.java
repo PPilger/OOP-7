@@ -1,33 +1,15 @@
-
 public class LeftMove implements FlexibleMove {
+	private ForwardMove forwardMove = new ForwardMove();
 
 	@Override
-	public CarPosition nextPos(CarPosition cp) {
-		int x = cp.getPoint().getX(), y = cp.getPoint().getY(), ori = cp.getOrientation();
-		Point retPt;
-		switch(ori)
-		{
-		case 0:
-			x--;
-			break;
-		case 1:
-			y++;
-			break;
-		case 2:
-			x++;;
-			break;
-		case 3:
-			y--;
-			break;
-		default:
-						
-		}
-		
-		//rotate orientation
+	public CarPosition nextPos(CarPosition pos) {
+		int ori = pos.getOrientation();
+
+		// rotate orientation
 		ori = (ori + 3) % 4;
-		
-		retPt = new Point(x, y);
-		
-		return new CarPosition(retPt, ori);
-	}	
+
+		pos = new CarPosition(pos.getPoint(), ori);
+
+		return forwardMove.nextPos(pos);
+	}
 }
