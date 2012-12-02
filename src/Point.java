@@ -1,18 +1,30 @@
-
 public class Point {
 	private int x;
 	private int y;
-	
+
 	public Point(int x, int y) {
-		
+		this.x = x;
+		this.y = y;
 	}
-	
+
 	public int getX() {
 		return x;
 	}
-	
+
 	public int getY() {
 		return y;
+	}
+
+	public Point move(int ori) {
+		if (ori == 0) {
+			return new Point(x, y + 1);
+		} else if (ori == 1) {
+			return new Point(x + 1, y);
+		} else if (ori == 2) {
+			return new Point(x, y - 1);
+		} else {
+			return new Point(x - 1, y);
+		}
 	}
 
 	@Override

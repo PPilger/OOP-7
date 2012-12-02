@@ -1,5 +1,4 @@
 public class LeftMove implements FlexibleMove {
-	private ForwardMove forwardMove = new ForwardMove();
 
 	@Override
 	public CarPosition nextPos(CarPosition pos) {
@@ -10,6 +9,6 @@ public class LeftMove implements FlexibleMove {
 
 		pos = new CarPosition(pos.getPoint(), ori);
 
-		return forwardMove.nextPos(pos);
+		return pos.move();
 	}
 }
