@@ -1,10 +1,9 @@
 import java.util.*;
 
-import com.sun.org.apache.xalan.internal.xsltc.compiler.util.Util;
 /**
- * Stellt ein Autodrom dar. 
+ * Stellt ein Autodrom dar.
  */
-public class Autodrom extends Thread{
+public class Autodrom extends Thread {
 	private List<Car> cars = new ArrayList<Car>();
 	private DrivingArea area;
 
@@ -20,32 +19,25 @@ public class Autodrom extends Thread{
 	 * Blockiert bis die Runde beendet wurde.
 	 */
 	public void run() {
-		
-		
-		for(Car c: cars)
-		{
+
+		for (Car c : cars) {
 			c.start();
 		}
-		
+
 		boolean finished = false;
-		
-			
-		while(!finished)
-		{
-			
-			
+
+		while (!finished) {
+
 			finished = true;
-			for(Car c : cars)
-			{
-				if(c.isAlive())
-				{
+			for (Car c : cars) {
+				if (c.isAlive()) {
 					finished = false;
 					break;
 				}
 			}
 		}
-		
+
 		System.out.print("RUnde Ferti ;-)");
-		
+
 	}
 }

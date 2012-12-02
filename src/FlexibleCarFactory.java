@@ -33,6 +33,6 @@ public class FlexibleCarFactory implements CarFactory {
 	 * Adds new flexibleCar to the given Driving Area
 	 */
 	public void create(DrivingArea area) {
-		area.add(new FlexibleCar(area,cp, strategy, waitms), cp);
+		area.add(new FlexibleCar(area,cp, strategy, waitms), cp.getPoint());
 	}
 }

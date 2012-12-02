@@ -28,6 +28,6 @@ public class FastCarFactory implements CarFactory {
 	 * Adds new FastCar to the given Driving Area
 	 */
 	public void create(DrivingArea area) {
-		area.add(new FastCar(area, cp, strategy, waitms), cp);
+		area.add(new FastCar(area, cp, strategy, waitms), cp.getPoint());
 		}
 	}
