@@ -8,7 +8,8 @@ public abstract class Car extends Thread {
 	private int maxPath = 100;
 	private int movedCnt = 0;
 
-	public Car(String name, DrivingArea area, Strategy<? extends Move> strategy, int waitms) {
+	public Car(String name, DrivingArea area,
+			Strategy<? extends Move> strategy, int waitms) {
 		super(area, name);
 		this.area = area;
 		this.points = new Points();
@@ -51,20 +52,56 @@ public abstract class Car extends Thread {
 
 	public void hit(int thisOri, Car other, int otherOri)
 			throws InterruptedException {
-		this.points.inc();
 
 		if (otherOri == (thisOri + 2) % 4) {
 			// frontal crash => bonus point for attacker
 
-			System.out.println(this + " trifft " + other + " frontal.");
+			// only one car can increase its points at any time
+			synchronized (area) {
+				// check for interrupt to prevent multiple program
+				// exits, especially more than one winning car
+				if (Thread.interrupted()) {
+					throw new InterruptedException();
+				}
 
-			this.points.inc();
+				System.out.println(this + " trifft " + other + " frontal.");
+
+				this.points.inc(2);
+			}
 		} else {
 			// non frontal crash => minus point for defender
 
-			System.out.println(this + " trifft " + other);
+			if(this.getId() < other.getId()) {
+				synchronized (this.points) {
+					synchronized (other.points) {
+						// check for interrupt to prevent a possible manipulation of
+						// the winning Car
+						if (Thread.interrupted()) {
+							throw new InterruptedException();
+						}
+						
+						System.out.println(this + " trifft " + other);
 
-			other.points.dec();
+						other.points.dec(1);
+						this.points.inc(1);
+					}
+				}
+			} else {
+				synchronized (other.points) {
+					synchronized (this.points) {
+						// check for interrupt to prevent a possible manipulation of
+						// the winning Car
+						if (Thread.interrupted()) {
+							throw new InterruptedException();
+						}
+						
+						System.out.println(this + " trifft " + other);
+
+						other.points.dec(1);
+						this.points.inc(1);
+					}
+				}
+			}
 		}
 	}
 
@@ -80,55 +117,41 @@ public abstract class Car extends Thread {
 		return sb.toString();
 	}
 
-	/**
-	 * Represents the points of a car. Points also checks if the point-limit is
-	 * reached. In this case all Cars on the DrivingArea are interrupted.
-	 * 
-	 * This class is synchronized:
-	 * 
-	 * 1) Only one Thread can manipulate the points at a time.
-	 * 
-	 * 2) Locks the DrivingArea before an increment to prevent multiple
-	 * terminations (e.g. two winners)
-	 * 
-	 * @author Peter Pilgerstorfer
-	 */
+//	/**
+//	 * Represents the points of a car. Points also checks if the point-limit is
+//	 * reached. In this case all Cars on the DrivingArea are interrupted.
+//	 * 
+//	 * This class is synchronized:
+//	 * 
+//	 * 1) Only one Thread can manipulate the points at a time.
+//	 * 
+//	 * 2) Locks the DrivingArea before an increment to prevent multiple
+//	 * terminations (e.g. two winners)
+//	 * 
+//	 * @author Peter Pilgerstorfer
+//	 */
 	private class Points {
 		private int value = 0;
 
-		private synchronized void inc() throws InterruptedException {
-			// only one car can increase its points at any time
-			synchronized (area) {
-				// check for interrupt to prevent multiple program
-				// exits, especially more than one winning car
-				if (Thread.interrupted()) {
-					throw new InterruptedException();
-				}
+		private void inc(int amount) {
+			value += amount;
 
-				value++;
+			if (value >= 10) {
 
-				if (value >= 10) {
-					System.out.println(Car.this + " hat das Punktelimit erreicht.");
+				System.out.println(Car.this + " hat das Punktelimit erreicht.");
 
-					// stop all cars
-					area.interrupt();
+				// stop all cars
+				area.interrupt();
 
-					// The current thread is interrupted and will be
-					// terminated at the next sleep or interrupt-check
-				}
+				// The current thread is interrupted and will be
+				// terminated at the next sleep or interrupt-check
 			}
 		}
 
-		private synchronized void dec() throws InterruptedException {
-			// check for interrupt to prevent a possible manipulation of
-			// the winning Car
-			if (Thread.interrupted()) {
-				throw new InterruptedException();
-			}
-
-			value--;
+		private void dec(int amount) {
+			value -= amount;
 		}
-		
+
 		@Override
 		public String toString() {
 			return Integer.toString(value);

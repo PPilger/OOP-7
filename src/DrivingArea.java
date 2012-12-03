@@ -151,10 +151,10 @@ public class DrivingArea extends ThreadGroup {
 		int y = pos.getY();
 
 		x = Math.max(x, 0);
-		x = Math.min(x, width);
+		x = Math.min(x, width-1);
 
 		y = Math.max(y, 0);
-		y = Math.min(y, height);
+		y = Math.min(y, height-1);
 
 		return new Point(x, y);
 	}
