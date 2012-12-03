@@ -119,7 +119,7 @@ public class DrivingArea extends ThreadGroup {
 		// positions.put(car, newPos);
 		// }
 		
-		System.out.println(this);
+		//System.out.println(this);
 	}
 
 	/**

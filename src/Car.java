@@ -51,9 +51,7 @@ public abstract class Car extends Thread {
 
 	public void hit(int thisOri, Car other, int otherOri)
 			throws InterruptedException {
-		// assertions due to synchronization for this method
-		// if a car wins, it has 10 points (points cannot be reduced)
-		// only a single car can reach 10 points
+		this.points.inc();
 
 		if (otherOri == (thisOri + 2) % 4) {
 			// frontal crash => bonus point for attacker
@@ -110,7 +108,7 @@ public abstract class Car extends Thread {
 				value++;
 
 				if (value >= 10) {
-					System.out.println(this + " hat das Punktelimit erreicht.");
+					System.out.println(Car.this + " hat das Punktelimit erreicht.");
 
 					// stop all cars
 					area.interrupt();
