@@ -1,4 +1,5 @@
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A strategy that lets a car go in a rectangle
@@ -15,24 +16,24 @@ public class RectangleStrategy extends RepeatedStrategy<FlexibleMove> {
 		super(RectangleStrategy.moves(width, height));
 	}
 
-	private static LinkedList<FlexibleMove> moves(int width, int height) {
-		LinkedList<FlexibleMove> moves = new LinkedList<FlexibleMove>();
+	private static List<FlexibleMove> moves(int width, int height) {
+		List<FlexibleMove> moves = new ArrayList<FlexibleMove>();
 		LeftMove left = new LeftMove();
 		ForwardMove forward = new ForwardMove();
 
 		// width-side
 		for (int i = 0; i < width; i++) {
-			moves.offer(forward);
+			moves.add(forward);
 		}
 
-		moves.offer(left);
+		moves.add(left);
 
 		// height-side
 		for (int i = 0; i < height; i++) {
-			moves.offer(forward);
+			moves.add(forward);
 		}
 
-		moves.offer(left);
+		moves.add(left);
 
 		return moves;
 	}

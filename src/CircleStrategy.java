@@ -1,4 +1,5 @@
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A strategy that lets a car drive in a circle.
@@ -17,8 +18,8 @@ public class CircleStrategy extends RepeatedStrategy<FastMove> {
 		super(CircleStrategy.moves(size));
 	}
 
-	private static LinkedList<FastMove> moves(int size) {
-		LinkedList<FastMove> moves = new LinkedList<FastMove>();
+	private static List<FastMove> moves(int size) {
+		List<FastMove> moves = new ArrayList<FastMove>();
 		ForwardLeftMove forwardLeft = new ForwardLeftMove();
 		ForwardMove forward = new ForwardMove();
 

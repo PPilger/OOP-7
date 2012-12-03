@@ -1,5 +1,4 @@
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.List;
 
 /**
  * Defines a strategy that repeats a set of moves.
@@ -7,7 +6,8 @@ import java.util.Queue;
  * @author Peter Pilgerstorfer
  */
 public abstract class RepeatedStrategy<P extends Move> implements Strategy<P> {
-	private Queue<P> moves;
+	private List<P> moves;
+	private int pos = 0;
 
 	/**
 	 * Creates a new strategy that returns the specified moves repeatedly.
@@ -15,7 +15,7 @@ public abstract class RepeatedStrategy<P extends Move> implements Strategy<P> {
 	 * @param moves
 	 *            the moves that should be repeated
 	 */
-	public RepeatedStrategy(LinkedList<P> moves) {
+	public RepeatedStrategy(List<P> moves) {
 		this.moves = moves;
 	}
 
@@ -23,14 +23,7 @@ public abstract class RepeatedStrategy<P extends Move> implements Strategy<P> {
 	 * Returns the next move according to the strategy.
 	 */
 	public P nextMove() {
-		P next = null;
-		try{
-			next = moves.poll();
-			moves.offer(next);
-		} catch(NullPointerException e) {
-			System.out.println(moves);
-		}
-
-		return next;
+		pos = (pos + 1) % moves.size();
+		return moves.get(pos);
 	}
 }
