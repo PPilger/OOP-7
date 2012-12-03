@@ -1,3 +1,3 @@
 
-public interface FastMove extends FlexibleMove {
+public abstract class FastMove extends FlexibleMove {
 }

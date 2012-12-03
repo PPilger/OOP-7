@@ -1,7 +1,7 @@
-public class ForwardMove implements FastMove {
+public class ForwardMove extends FastMove {
 
 	@Override
-	public CarPosition nextPos(CarPosition pos) {
-		return pos.move();
+	public int nextOri(int currentOri) {
+		return currentOri;
 	}
 }

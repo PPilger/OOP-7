@@ -1,43 +1,55 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Stellt ein Autodrom dar.
  */
-public class Autodrom extends Thread {
+public class Autodrom extends ThreadGroup {
 	private List<Car> cars = new ArrayList<Car>();
 	private DrivingArea area;
 
 	public Autodrom(int width, int height) {
+		super("Cars");
 		this.area = new DrivingArea(width, height);
 	}
 
 	public void addCar(CarFactory factory) {
-		factory.create(area);
+		Car car = factory.create(this, area);
+		cars.add(car);
 	}
 
 	/**
 	 * Blockiert bis die Runde beendet wurde.
 	 */
-	public void run() {
-
+	public void start() {
+		
 		for (Car c : cars) {
 			c.start();
 		}
 
-		boolean finished = false;
-
-		while (!finished) {
-
-			finished = true;
+		try {
 			for (Car c : cars) {
-				if (c.isAlive()) {
-					finished = false;
-					break;
-				}
+				c.join();
 			}
+
+			System.out.print("Runde Fertig ;-)");
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
 
-		System.out.print("RUnde Ferti ;-)");
+		// boolean finished = false;
+		//
+		// while (!finished) {
+		//
+		// finished = true;
+		// for (Car c : cars) {
+		// if (c.isAlive()) {
+		// finished = false;
+		// break;
+		// }
+		// }
+		// }
 
+		// System.out.print("Runde Fertig ;-)");
 	}
 }

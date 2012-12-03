@@ -4,10 +4,8 @@
  *
  */
 public interface Move {
-	/**
-	 * Moves a Car
-	 * @param cp 3D position before moving
-	 * @return 3D postion after moving
-	 */
+
 	public CarPosition nextPos(CarPosition cp);
+	
+	public int nextOri(int currentOri);
 }

@@ -1,8 +1,6 @@
 public class FastCar extends Car {
-
-	public FastCar(DrivingArea area, CarPosition cp,
+	public FastCar(Autodrom autodrom, DrivingArea area,
 			Strategy<FastMove> strategy, int waitms) {
-		super(area, cp, strategy, waitms);
+		super(autodrom, area, strategy, waitms);
 	}
-
 }

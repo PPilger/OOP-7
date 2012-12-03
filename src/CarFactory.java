@@ -9,5 +9,5 @@ public interface CarFactory {
 	 * Should add a car to the given DrivingArea
 	 * @param area on which the given Car should drive
 	 */
-	public void create(DrivingArea area);
+	public Car create(Autodrom autodrom, DrivingArea area);
 }

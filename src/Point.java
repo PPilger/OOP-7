@@ -1,4 +1,4 @@
-public class Point {
+public class Point implements Comparable<Point> {
 	private int x;
 	private int y;
 
@@ -50,5 +50,20 @@ public class Point {
 		if (y != other.y)
 			return false;
 		return true;
+	}
+
+	@Override
+	public int compareTo(Point o) {
+		if (y < o.y) {
+			return -1;
+		} else if (y > o.y) {
+			return 1;
+		} else if (x < o.x) {
+			return -1;
+		} else if (x > o.x) {
+			return 1;
+		} else {
+			return 0;
+		}
 	}
 }
