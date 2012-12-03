@@ -8,8 +8,8 @@ public abstract class Car extends Thread {
 	private int maxPath = 100;
 	private int movedCnt = 0;
 
-	public Car(DrivingArea area, Strategy<? extends Move> strategy, int waitms) {
-		super(area, "Car");
+	public Car(String name, DrivingArea area, Strategy<? extends Move> strategy, int waitms) {
+		super(area, name);
 		this.area = area;
 		this.points = new Points();
 		this.strategy = strategy;
@@ -47,6 +47,39 @@ public abstract class Car extends Thread {
 		} catch (InterruptedException e) {
 			System.out.println(this + " ist fertig.");
 		}
+	}
+
+	public void hit(int thisOri, Car other, int otherOri)
+			throws InterruptedException {
+		// assertions due to synchronization for this method
+		// if a car wins, it has 10 points (points cannot be reduced)
+		// only a single car can reach 10 points
+
+		if (otherOri == (thisOri + 2) % 4) {
+			// frontal crash => bonus point for attacker
+
+			System.out.println(this + " trifft " + other + " frontal.");
+
+			this.points.inc();
+		} else {
+			// non frontal crash => minus point for defender
+
+			System.out.println(this + " trifft " + other);
+
+			other.points.dec();
+		}
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(this.getName());
+		sb.append(" (");
+		sb.append(this.movedCnt);
+		sb.append(" moves, ");
+		sb.append(this.points);
+		sb.append(" points)");
+		return sb.toString();
 	}
 
 	/**
@@ -97,39 +130,10 @@ public abstract class Car extends Thread {
 
 			value--;
 		}
-	}
-
-	public void hit(int thisOri, Car other, int otherOri)
-			throws InterruptedException {
-		// assertions due to synchronization for this method
-		// if a car wins, it has 10 points (points cannot be reduced)
-		// only a single car can reach 10 points
-
-		if (otherOri == (thisOri + 2) % 4) {
-			// frontal crash => bonus point for attacker
-
-			System.out.println(this + " trifft " + other + " frontal.");
-
-			this.points.inc();
-		} else {
-			// non frontal crash => minus point for defender
-
-			System.out.println(this + " trifft " + other);
-
-			other.points.dec();
+		
+		@Override
+		public String toString() {
+			return Integer.toString(value);
 		}
-	}
-
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("Car ");
-		sb.append(this.getName());
-		sb.append(", ");
-		sb.append(this.movedCnt);
-		sb.append(" moves, ");
-		sb.append(this.points);
-		sb.append(" points");
-		return sb.toString();
 	}
 }

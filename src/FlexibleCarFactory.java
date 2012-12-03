@@ -5,18 +5,24 @@
  * 
  */
 public class FlexibleCarFactory implements CarFactory {
+	private String name;
 	private CarPosition pos;
 	private Strategy<? extends FlexibleMove> strategy;
 	private int waitms;
 
 	/**
-	 * Creates a new CarFactory with default values: position=(0/0),
-	 * orientation=0, strategy=FastRandomStrategy, waitms=20
+	 * Creates a new CarFactory with default values: name="FlexibleCar",
+	 * position=(0/0), orientation=0, strategy=FastRandomStrategy, waitms=20
 	 */
 	public FlexibleCarFactory() {
+		this.name = "FlexibleCar";
 		this.pos = new CarPosition(new Point(0, 0), 0);
 		this.strategy = new FastRandomStrategy();
 		this.waitms = 20;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public void setPos(CarPosition pos) {
@@ -36,9 +42,9 @@ public class FlexibleCarFactory implements CarFactory {
 	 * Adds new flexibleCar to the given Driving Area
 	 */
 	public FlexibleCar create(DrivingArea area) {
-		FlexibleCar car = new FlexibleCar(area, strategy, waitms);
+		FlexibleCar car = new FlexibleCar(name, area, strategy, waitms);
 		area.add(car, pos);
-		
+
 		return car;
 	}
 }

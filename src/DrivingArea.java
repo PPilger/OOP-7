@@ -160,19 +160,6 @@ public class DrivingArea extends ThreadGroup {
 	}
 	
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		
-		for(List<Set<Car>> row : cells) {
-			for(Set<Car> cell : row) {
-				int numCars = cell.size();
-				if(numCars == 0) {
-					sb.append("  ");
-				} else {
-					sb.append(String.format("%02d", numCars));
-				}
-			}
-		}
-		
-		return sb.toString();
+		return positions.toString();
 	}
 }
