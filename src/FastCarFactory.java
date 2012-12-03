@@ -33,8 +33,8 @@ public class FastCarFactory implements CarFactory {
 	/**
 	 * Adds new FastCar to the given Driving Area
 	 */
-	public FastCar create(Autodrom autodrom, DrivingArea area) {
-		FastCar car = new FastCar(autodrom, area, strategy, waitms);
+	public FastCar create(DrivingArea area) {
+		FastCar car = new FastCar(area, strategy, waitms);
 		area.add(car, pos);
 
 		return car;

@@ -4,17 +4,16 @@ import java.util.List;
 /**
  * Stellt ein Autodrom dar.
  */
-public class Autodrom extends ThreadGroup {
+public class Autodrom {
 	private List<Car> cars = new ArrayList<Car>();
 	private DrivingArea area;
 
 	public Autodrom(int width, int height) {
-		super("Cars");
 		this.area = new DrivingArea(width, height);
 	}
 
 	public void addCar(CarFactory factory) {
-		Car car = factory.create(this, area);
+		Car car = factory.create(area);
 		cars.add(car);
 	}
 
@@ -22,7 +21,6 @@ public class Autodrom extends ThreadGroup {
 	 * Blockiert bis die Runde beendet wurde.
 	 */
 	public void start() {
-		
 		for (Car c : cars) {
 			c.start();
 		}
@@ -32,7 +30,7 @@ public class Autodrom extends ThreadGroup {
 				c.join();
 			}
 
-			System.out.print("Runde Fertig ;-)");
+			System.out.print("Runde fertig ;-)");
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

@@ -1,7 +1,12 @@
 public class LeftMove extends FlexibleMove {
 
-	@Override
-	public int nextOri(int currentOri) {
-		return (currentOri + 3) % 4;
+	public CarPosition nextPos(CarPosition pos) {
+		int ori = pos.getOrientation();
+
+		ori = (ori + 3) % 4;
+
+		pos = new CarPosition(pos.getPoint(), ori);
+
+		return pos.move();
 	}
 }

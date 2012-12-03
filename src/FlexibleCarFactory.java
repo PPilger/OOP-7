@@ -40,8 +40,8 @@ public class FlexibleCarFactory implements CarFactory {
 	/**
 	 * Adds new flexibleCar to the given Driving Area
 	 */
-	public FlexibleCar create(Autodrom autodrom, DrivingArea area) {
-		FlexibleCar car = new FlexibleCar(autodrom, area, strategy, waitms);
+	public FlexibleCar create(DrivingArea area) {
+		FlexibleCar car = new FlexibleCar(area, strategy, waitms);
 		area.add(car, pos);
 		
 		return car;

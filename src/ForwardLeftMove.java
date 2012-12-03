@@ -8,9 +8,4 @@ public class ForwardLeftMove extends FastMove {
 		pos = leftMove.nextPos(pos);
 		return pos;
 	}
-
-	@Override
-	public int nextOri(int currentOri) {
-		return leftMove.nextOri(currentOri);
-	}
 }

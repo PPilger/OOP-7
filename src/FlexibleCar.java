@@ -1,6 +1,6 @@
 public class FlexibleCar extends Car {
-	public FlexibleCar(Autodrom autodrom, DrivingArea area,
+	public FlexibleCar(DrivingArea area,
 			Strategy<FlexibleMove> strategy, int waitms) {
-		super(autodrom, area, strategy, waitms);
+		super(area, strategy, waitms);
 	}
 }

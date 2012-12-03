@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class DrivingArea {
+public class DrivingArea extends ThreadGroup {
 	// private Map<Point, Set<Car>> usedCells = new HashMap<Point, Set<Car>>();
 	private List<List<Set<Car>>> cells;
 	private Map<Car, CarPosition> positions = new Hashtable<Car, CarPosition>(); // synchronized
@@ -8,6 +8,7 @@ public class DrivingArea {
 	private int height;
 
 	public DrivingArea(int width, int height) {
+		super("Cars");
 		this.width = width;
 		this.height = height;
 

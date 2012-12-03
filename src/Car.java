@@ -1,5 +1,4 @@
 public abstract class Car extends Thread {
-	private Autodrom autodrom;
 	private DrivingArea area;
 	private Points points;
 	private Strategy<? extends Move> strategy;
@@ -9,10 +8,8 @@ public abstract class Car extends Thread {
 	private int maxPath = 100;
 	private int movedCnt = 0;
 
-	public Car(Autodrom autodrom, DrivingArea area,
-			Strategy<? extends Move> strategy, int waitms) {
-		super(autodrom, "Car");
-		this.autodrom = autodrom;
+	public Car(DrivingArea area, Strategy<? extends Move> strategy, int waitms) {
+		super(area, "Car");
 		this.area = area;
 		this.points = new Points();
 		this.strategy = strategy;
@@ -30,10 +27,19 @@ public abstract class Car extends Thread {
 				movedCnt++;
 
 				if (movedCnt >= maxPath) {
-					System.out.println(this
-							+ " hat das die max. Anzahl an Schritten erreicht.");
-					
-					autodrom.interrupt();
+					synchronized (area) {
+						// check for interrupt to prevent multiple program exits
+						if (Thread.interrupted()) {
+							throw new InterruptedException();
+						}
+
+						System.out
+								.println(this
+										+ " hat das die max. Anzahl an Schritten erreicht.");
+
+						// stop all cars
+						area.interrupt();
+					}
 				}
 
 				Thread.sleep(waitms);
@@ -85,9 +91,9 @@ public abstract class Car extends Thread {
 				// wait if points are being manipulated
 				synchronized (attacker.points) {
 					// only one car can increase its points at any time
-					synchronized (autodrom) {
-						// check for interrupt to prevent more than one winning
-						// car
+					synchronized (area) {
+						// check for interrupt to prevent multiple program
+						// exits, especially more than one winning car
 						if (Thread.interrupted()) {
 							throw new InterruptedException();
 						}
@@ -95,10 +101,12 @@ public abstract class Car extends Thread {
 						attacker.points.inc();
 
 						if (attacker.points.value >= 10) {
-							autodrom.interrupt();
 
 							System.out.println(this
 									+ " hat das Punktelimit erreicht.");
+
+							// stop all cars
+							area.interrupt();
 
 							// The current thread is interrupted and will be
 							// terminated at the next sleep or interrupt-check
