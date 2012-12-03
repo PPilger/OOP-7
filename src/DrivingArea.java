@@ -119,7 +119,7 @@ public class DrivingArea extends ThreadGroup {
 		// positions.put(car, newPos);
 		// }
 		
-		//System.out.println(this);
+		System.out.println(this);
 	}
 
 	/**
@@ -159,7 +159,28 @@ public class DrivingArea extends ThreadGroup {
 		return new Point(x, y);
 	}
 	
+	private static int[][] counter;
+	
 	public String toString() {
-		return positions.toString();
+		//return positions.toString();
+		StringBuilder sb = new StringBuilder();
+		
+		if(counter == null) {
+			counter = new int[height][width];
+		}
+		
+		for(CarPosition pos : positions.values()) {
+			Point p = pos.getPoint();
+			counter[p.getY()][p.getX()]++;
+		}
+		
+		for(int i = 0; i < height; i++) {
+			for(int j = 0; j < width; j++) {
+				sb.append(counter[i][j]);
+			}
+			sb.append('\n');
+		}
+		
+		return sb.toString();
 	}
 }
