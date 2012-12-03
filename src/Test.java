@@ -6,7 +6,7 @@ public class Test {
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		Autodrom f = new Autodrom(100, 100);
+		Autodrom f = new Autodrom(40, 40);
 		
 		FastCarFactory fcf = new FastCarFactory();
 		
@@ -31,31 +31,31 @@ public class Test {
 		FlexibleCarFactory flcf = new FlexibleCarFactory();
 		
 		flcf.setName("FlexibleCar1");
-		flcf.setPos(new CarPosition(new Point(90, 10), 4));
+		flcf.setPos(new CarPosition(new Point(20, 10), 4));
 		f.addCar(flcf);
 		
 		flcf.setName("FlexibleCar2");
-		flcf.setPos(new CarPosition(new Point(25, 25), 1));
+		flcf.setPos(new CarPosition(new Point(13, 14), 1));
 		flcf.setStrategy(new EightStrategy(2));
 		f.addCar(flcf);
 		
 		flcf.setName("FlexibleCar3");
-		flcf.setPos(new CarPosition(new Point(25, 75), 2));
+		flcf.setPos(new CarPosition(new Point(12, 4), 2));
 		flcf.setStrategy(new RectangleStrategy(10, 25));
 		f.addCar(flcf);
 		
 		flcf.setName("FlexibleCar4");
-		flcf.setPos(new CarPosition(new Point(75, 75), 2));
+		flcf.setPos(new CarPosition(new Point(1, 20), 2));
 		flcf.setStrategy(new CircleStrategy(5));
 		f.addCar(flcf);
 		
 		flcf.setName("FlexibleCar5");
-		flcf.setPos(new CarPosition(new Point(75, 25), 3));
+		flcf.setPos(new CarPosition(new Point(14, 14), 3));
 		flcf.setStrategy(new RectangleStrategy(10, 40));
 		f.addCar(flcf);
 		
 		flcf.setName("FlexibleCar6");
-		flcf.setPos(new CarPosition(new Point(90, 11), 1));
+		flcf.setPos(new CarPosition(new Point(4, 1), 1));
 		f.addCar(flcf);
 		
 		f.start();
