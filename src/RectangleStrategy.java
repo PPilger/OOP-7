@@ -22,17 +22,17 @@ public class RectangleStrategy extends RepeatedStrategy<FlexibleMove> {
 
 		// width-side
 		for (int i = 0; i < width; i++) {
-			moves.add(forward);
+			moves.offer(forward);
 		}
 
-		moves.add(left);
+		moves.offer(left);
 
 		// height-side
 		for (int i = 0; i < height; i++) {
-			moves.add(forward);
+			moves.offer(forward);
 		}
 
-		moves.add(left);
+		moves.offer(left);
 
 		return moves;
 	}

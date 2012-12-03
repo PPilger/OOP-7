@@ -23,8 +23,13 @@ public abstract class RepeatedStrategy<P extends Move> implements Strategy<P> {
 	 * Returns the next move according to the strategy.
 	 */
 	public P nextMove() {
-		P next = moves.poll();
-		moves.offer(next);
+		P next = null;
+		try{
+			next = moves.poll();
+			moves.offer(next);
+		} catch(NullPointerException e) {
+			System.out.println(moves);
+		}
 
 		return next;
 	}
