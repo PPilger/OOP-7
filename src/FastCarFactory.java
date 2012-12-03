@@ -1,5 +1,5 @@
 /**
- * Creates new FastCars with given params, which are set in constructor
+ * Creates new FastCars with given params
  * 
  * @author VHD
  * 
@@ -7,13 +7,12 @@
 public class FastCarFactory implements CarFactory {
 
 	private CarPosition pos;
-	private Strategy<FastMove> strategy;
+	private Strategy<? extends FastMove> strategy;
 	private int waitms;
 
 	/**
-	 * 
-	 * Creates a new CarFactory with default values:
-	 * position=(0/0), orientation=0, strategy=FastRandomStrategy, waitms=10
+	 * Creates a new CarFactory with default values: position=(0/0),
+	 * orientation=0, strategy=FastRandomStrategy, waitms=10
 	 */
 	public FastCarFactory() {
 		this.pos = new CarPosition(new Point(0, 0), 0);
@@ -25,7 +24,7 @@ public class FastCarFactory implements CarFactory {
 		this.pos = pos;
 	}
 
-	public void setStrategy(Strategy<FastMove> strategy) {
+	public void setStrategy(Strategy<? extends FastMove> strategy) {
 		this.strategy = strategy;
 	}
 

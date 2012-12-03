@@ -1,38 +1,33 @@
 /**
- * Creates new FlexibleCars with given params, which are set in constructor
+ * Creates new FlexibleCars with given params
  * 
  * @author VHD
  * 
  */
 public class FlexibleCarFactory implements CarFactory {
-	/*
-	 * private Point initPos; private int initOri;
-	 */
 	private CarPosition pos;
-	private Strategy<FlexibleMove> strategy;
+	private Strategy<? extends FlexibleMove> strategy;
 	private int waitms;
 
 	/**
-	 * Set Params of new FlexibleCar which will be added to a given Driving Area
-	 * by calling create().
-	 * 
-	 * @param initPos
-	 *            Initial position
-	 * @param initOri
-	 *            Initial orientation
-	 * @param strategy
-	 * @param waitms
-	 *            Time between position changement
+	 * Creates a new CarFactory with default values: position=(0/0),
+	 * orientation=0, strategy=FastRandomStrategy, waitms=20
 	 */
-	/*
-	 * public FlexibleCarFactory(Point initPos, int initOri,
-	 * Strategy<FlexibleMove> strategy, int waitms) { this.initPos = initPos;
-	 * this.initOri = initOri;
-	 */
-	public FlexibleCarFactory(CarPosition pos, Strategy<FlexibleMove> strategy,
-			int waitms) {
+	public FlexibleCarFactory() {
+		this.pos = new CarPosition(new Point(0, 0), 0);
+		this.strategy = new FastRandomStrategy();
+		this.waitms = 20;
+	}
+
+	public void setPos(CarPosition pos) {
 		this.pos = pos;
+	}
+
+	public void setStrategy(Strategy<? extends FlexibleMove> strategy) {
 		this.strategy = strategy;
+	}
+
+	public void setWaitms(int waitms) {
 		this.waitms = waitms;
 	}
 

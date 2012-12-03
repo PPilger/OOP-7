@@ -35,7 +35,7 @@ public abstract class Car extends Thread {
 
 						System.out
 								.println(this
-										+ " hat das die max. Anzahl an Schritten erreicht.");
+										+ " hat die max. Anzahl an Schritten erreicht.");
 
 						// stop all cars
 						area.interrupt();
@@ -49,27 +49,52 @@ public abstract class Car extends Thread {
 		}
 	}
 
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("Car (ThreadID: ");
-		sb.append(this.getId());
-		sb.append(", Moves: ");
-		sb.append(this.movedCnt);
-		sb.append(", Points: ");
-		sb.append(this.points);
-		sb.append(")");
-		return sb.toString();
-	}
-
+	/**
+	 * Represents the points of a car. Points also checks if the point-limit is
+	 * reached. In this case all Cars on the DrivingArea are interrupted.
+	 * 
+	 * This class is synchronized:
+	 * 
+	 * 1) Only one Thread can manipulate the points at a time.
+	 * 
+	 * 2) Locks the DrivingArea before an increment to prevent multiple
+	 * terminations (e.g. two winners)
+	 * 
+	 * @author Peter Pilgerstorfer
+	 */
 	private class Points {
 		private int value = 0;
 
-		private void inc() {
-			value++;
+		private synchronized void inc() throws InterruptedException {
+			// only one car can increase its points at any time
+			synchronized (area) {
+				// check for interrupt to prevent multiple program
+				// exits, especially more than one winning car
+				if (Thread.interrupted()) {
+					throw new InterruptedException();
+				}
+
+				value++;
+
+				if (value >= 10) {
+					System.out.println(this + " hat das Punktelimit erreicht.");
+
+					// stop all cars
+					area.interrupt();
+
+					// The current thread is interrupted and will be
+					// terminated at the next sleep or interrupt-check
+				}
+			}
 		}
 
-		private void dec() {
+		private synchronized void dec() throws InterruptedException {
+			// check for interrupt to prevent a possible manipulation of
+			// the winning Car
+			if (Thread.interrupted()) {
+				throw new InterruptedException();
+			}
+
 			value--;
 		}
 	}
@@ -83,48 +108,28 @@ public abstract class Car extends Thread {
 		if (otherOri == (thisOri + 2) % 4) {
 			// frontal crash => bonus point for attacker
 
-			// wait if points are being manipulated
-			synchronized (this.points) {
-				// only one car can increase its points at any time
-				synchronized (area) {
-					// check for interrupt to prevent multiple program
-					// exits, especially more than one winning car
-					if (Thread.interrupted()) {
-						throw new InterruptedException();
-					}
-
-					this.points.inc();
-
-					if (this.points.value >= 10) {
-
-						System.out.println(this
-								+ " hat das Punktelimit erreicht.");
-
-						// stop all cars
-						area.interrupt();
-
-						// The current thread is interrupted and will be
-						// terminated at the next sleep or interrupt-check
-					}
-				}
-			}
-
 			System.out.println(this + " trifft " + other + " frontal.");
+
+			this.points.inc();
 		} else {
 			// non frontal crash => minus point for defender
 
-			// wait if points are being manipulated
-			synchronized (other.points) {
-				// check for interrupt to prevent a possible manipulation of
-				// the winning Car
-				if (Thread.interrupted()) {
-					throw new InterruptedException();
-				}
-
-				other.points.dec();
-			}
-
 			System.out.println(this + " trifft " + other);
+
+			other.points.dec();
 		}
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Car ");
+		sb.append(this.getName());
+		sb.append(", ");
+		sb.append(this.movedCnt);
+		sb.append(" moves, ");
+		sb.append(this.points);
+		sb.append(" points");
+		return sb.toString();
 	}
 }
