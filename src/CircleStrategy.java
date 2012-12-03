@@ -1,33 +1,34 @@
 import java.util.LinkedList;
 
 /**
- * Laesst ein Auto im Kreis fahren.
+ * A strategy that lets a car drive in a circle.
  */
-public class CircleStrategy extends Strategy<FastMove> {
+public class CircleStrategy extends RepeatedStrategy<FastMove> {
 
 	/**
-	 * Erstellt eine im Kreis fahr Strategie. Wenn size 0 ist, faert das Auto
-	 * den kleinst moeglichen Kreis (immer ForwardLeftMove). Sonst werden size
-	 * ForwardMoves vor jedem Richtungswechsel durchgefuehrt.
+	 * Creates a new strategy where the car drives in a circle counterclockwise.
+	 * Between each ForwardLeftMove, size ForwardMoves are done. The car starts
+	 * with the ForwardMoves.
+	 * 
+	 * @param size
+	 *            defines the size of the circle (0 ... smallest circle)
 	 */
 	public CircleStrategy(int size) {
-		this(new LinkedList<FastMove>(), size);
+		super(CircleStrategy.moves(size));
 	}
 
-	private CircleStrategy(LinkedList<FastMove> list, int size) {
-		super(list);
-		ForwardLeftMove flm = new ForwardLeftMove();
-		ForwardMove fwd = new ForwardMove();
-		
-		for(int i = 0; i < 4; i++)
-		{
-			for(int j = 0; j < size; j++)
-			{
-				list.add(fwd);
+	private static LinkedList<FastMove> moves(int size) {
+		LinkedList<FastMove> moves = new LinkedList<FastMove>();
+		ForwardLeftMove forwardLeft = new ForwardLeftMove();
+		ForwardMove forward = new ForwardMove();
+
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < size; j++) {
+				moves.add(forward);
 			}
-			list.add(flm);
+			moves.add(forwardLeft);
 		}
-		// setze die moves so:
-		// (FL)FF...F (#F = size)
+
+		return moves;
 	}
 }

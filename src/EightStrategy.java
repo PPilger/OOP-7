@@ -1,51 +1,46 @@
 import java.util.LinkedList;
 
 /**
- * Laesst ein Auto in einem Achter fahren.
+ * A strategy that lets a car drive an eight.
  */
-public class EightStrategy extends Strategy<FlexibleMove> {
-	
+public class EightStrategy extends RepeatedStrategy<FlexibleMove> {
+
 	/**
-	 * Erstellt eine Achter fahr Strategie.
+	 * Creates a new strategy that lets the car drive an eight.
+	 * The driven eight has a width of (size+1) and a height of (2*size+3)
+	 * The car starts along the bottom line of the eight.
 	 */
-	public EightStrategy() {
-		this(new LinkedList<FlexibleMove>());
+	public EightStrategy(int size) {
+		super(EightStrategy.moves(size));
 	}
-	
-	private EightStrategy(LinkedList<FlexibleMove> moves) {
-		super(moves);
-		int size = 3;
-		LeftMove flm = new LeftMove();
-		RightMove frm = new RightMove();
-		ForwardMove fwd = new ForwardMove();
-		
-		//first three left turns
-		for(int i = 0; i < 3; i++)
-		{
-			for(int j = 0; j < size; j++)
-			{
-				moves.add(fwd);
+
+	private static LinkedList<FlexibleMove> moves(int size) {
+		LinkedList<FlexibleMove> moves = new LinkedList<FlexibleMove>();
+		LeftMove left = new LeftMove();
+		RightMove right = new RightMove();
+		ForwardMove forward = new ForwardMove();
+
+		// first three left turns
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < size; j++) {
+				moves.add(forward);
 			}
-			moves.add(flm);
+			moves.add(left);
 		}
-		
-		for(int i = 0; i < 4; i++)
-		{
-			for(int j = 0; j < size; j++)
-			{
-				moves.add(fwd);
+
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < size; j++) {
+				moves.add(forward);
 			}
-			moves.add(frm);
+			moves.add(right);
 		}
-		
-		//last left turn
-		for(int j = 0; j < size; j++)
-		{
-			moves.add(fwd);
+
+		// last left turn
+		for (int j = 0; j < size; j++) {
+			moves.add(forward);
 		}
-		moves.add(flm);
-		
-		//setze die moves so:
-		// LLL(FL)RRR(FR)
+		moves.add(left);
+
+		return moves;
 	}
 }

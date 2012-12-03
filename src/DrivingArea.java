@@ -49,13 +49,13 @@ public class DrivingArea extends ThreadGroup {
 			set.add(car);
 		}
 
+		// positions is synchronized
 		positions.put(car, pos);
 
 		return true;
 	}
 
-	public void update(Car car, Move move, Car.OnHit onHit)
-			throws InterruptedException {
+	public void update(Car car, Move move) throws InterruptedException {
 		CarPosition oldPos = positions.get(car);
 		CarPosition newPos = move.nextPos(oldPos);
 		Point oldPoint = oldPos.getPoint();
@@ -71,13 +71,13 @@ public class DrivingArea extends ThreadGroup {
 		if (oldPoint.compareTo(newPoint) < 0) {
 			synchronized (oldCell) {
 				synchronized (newCell) {
-					update(oldCell, newCell, car, newPos, onHit);
+					update(oldCell, newCell, car, newPos);
 				}
 			}
 		} else {
 			synchronized (newCell) {
 				synchronized (oldCell) {
-					update(oldCell, newCell, car, newPos, onHit);
+					update(oldCell, newCell, car, newPos);
 				}
 			}
 		}
@@ -118,19 +118,20 @@ public class DrivingArea extends ThreadGroup {
 		// tmp.add(car);
 		// positions.put(car, newPos);
 		// }
+		
+		System.out.println(this);
 	}
 
 	/**
 	 * oldCell and newCell have to be locked by a synchronized statement.
 	 */
 	private void update(Set<Car> oldCell, Set<Car> newCell, Car car,
-			CarPosition newPos, Car.OnHit onHit) throws InterruptedException {
+			CarPosition newPos) throws InterruptedException {
 		oldCell.remove(car);
 
 		for (Car other : newCell) {
-			CarPosition posOther = positions.get(other);
-			onHit.onHit(car, newPos.getOrientation(), other,
-					posOther.getOrientation());
+			CarPosition otherPos = positions.get(other);
+			car.hit(newPos.getOrientation(), other, otherPos.getOrientation());
 		}
 
 		newCell.add(car);
@@ -156,5 +157,22 @@ public class DrivingArea extends ThreadGroup {
 		y = Math.min(y, height);
 
 		return new Point(x, y);
+	}
+	
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		
+		for(List<Set<Car>> row : cells) {
+			for(Set<Car> cell : row) {
+				int numCars = cell.size();
+				if(numCars == 0) {
+					sb.append("  ");
+				} else {
+					sb.append(String.format("%02d", numCars));
+				}
+			}
+		}
+		
+		return sb.toString();
 	}
 }

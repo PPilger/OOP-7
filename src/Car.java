@@ -22,7 +22,7 @@ public abstract class Car extends Thread {
 			while (movedCnt < maxPath) {
 				Move move = strategy.nextMove();
 
-				area.update(this, move, new OnHit());
+				area.update(this, move);
 
 				movedCnt++;
 
@@ -74,64 +74,57 @@ public abstract class Car extends Thread {
 		}
 	}
 
-	public class OnHit {
-		private OnHit() {
+	public void hit(int thisOri, Car other, int otherOri)
+			throws InterruptedException {
+		// assertions due to synchronization for this method
+		// if a car wins, it has 10 points (points cannot be reduced)
+		// only a single car can reach 10 points
 
-		}
+		if (otherOri == (thisOri + 2) % 4) {
+			// frontal crash => bonus point for attacker
 
-		public void onHit(Car attacker, int attOri, Car defender, int defOri)
-				throws InterruptedException {
-			// assertions due to synchronization for this method
-			// if a car wins, it has 10 points (points cannot be reduced)
-			// only a single car can reach 10 points
-
-			if (defOri == (attOri + 2) % 4) {
-				// frontal crash => bonus point for attacker
-
-				// wait if points are being manipulated
-				synchronized (attacker.points) {
-					// only one car can increase its points at any time
-					synchronized (area) {
-						// check for interrupt to prevent multiple program
-						// exits, especially more than one winning car
-						if (Thread.interrupted()) {
-							throw new InterruptedException();
-						}
-
-						attacker.points.inc();
-
-						if (attacker.points.value >= 10) {
-
-							System.out.println(this
-									+ " hat das Punktelimit erreicht.");
-
-							// stop all cars
-							area.interrupt();
-
-							// The current thread is interrupted and will be
-							// terminated at the next sleep or interrupt-check
-						}
-					}
-				}
-
-				System.out.println(attacker + " trifft " + defender
-						+ " frontal.");
-			} else {
-				// non frontal crash => minus point for defender
-
-				// wait if points are being manipulated
-				synchronized (defender.points) {
-					// check for interrupt to prevent a possible manipulation of
-					// the winning Car
+			// wait if points are being manipulated
+			synchronized (this.points) {
+				// only one car can increase its points at any time
+				synchronized (area) {
+					// check for interrupt to prevent multiple program
+					// exits, especially more than one winning car
 					if (Thread.interrupted()) {
 						throw new InterruptedException();
 					}
 
-					defender.points.dec();
+					this.points.inc();
+
+					if (this.points.value >= 10) {
+
+						System.out.println(this
+								+ " hat das Punktelimit erreicht.");
+
+						// stop all cars
+						area.interrupt();
+
+						// The current thread is interrupted and will be
+						// terminated at the next sleep or interrupt-check
+					}
+				}
+			}
+
+			System.out.println(this + " trifft " + other + " frontal.");
+		} else {
+			// non frontal crash => minus point for defender
+
+			// wait if points are being manipulated
+			synchronized (other.points) {
+				// check for interrupt to prevent a possible manipulation of
+				// the winning Car
+				if (Thread.interrupted()) {
+					throw new InterruptedException();
 				}
 
-				System.out.println(attacker + " trifft " + defender);
+				other.points.dec();
 			}
+
+			System.out.println(this + " trifft " + other);
 		}
 	}
 }

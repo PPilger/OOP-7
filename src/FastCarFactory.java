@@ -11,21 +11,25 @@ public class FastCarFactory implements CarFactory {
 	private int waitms;
 
 	/**
-	 * Set Params of new FastCar which will be added to a given Driving Area by
-	 * calling create().
 	 * 
-	 * @param initPos
-	 *            Initial position
-	 * @param initOri
-	 *            Initial orientation
-	 * @param strategy
-	 * @param waitms
-	 *            Time between position changement
+	 * Creates a new CarFactory with default values:
+	 * position=(0/0), orientation=0, strategy=FastRandomStrategy, waitms=10
 	 */
-	public FastCarFactory(CarPosition pos, Strategy<FastMove> strategy,
-			int waitms) {
+	public FastCarFactory() {
+		this.pos = new CarPosition(new Point(0, 0), 0);
+		this.strategy = new FastRandomStrategy();
+		this.waitms = 10;
+	}
+
+	public void setPos(CarPosition pos) {
 		this.pos = pos;
+	}
+
+	public void setStrategy(Strategy<FastMove> strategy) {
 		this.strategy = strategy;
+	}
+
+	public void setWaitms(int waitms) {
 		this.waitms = waitms;
 	}
 
