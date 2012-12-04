@@ -13,7 +13,7 @@ public class Test {
 	}
 	
 	public static void test1() {
-		Autodrom f = new Autodrom(40, 40);
+		Autodrom f = new Autodrom(40, 40, 100);
 		
 		FastCarFactory fcf = new FastCarFactory();
 		
@@ -69,7 +69,7 @@ public class Test {
 	}
 	
 	public static void test2() {
-		Autodrom f = new Autodrom(7, 7);
+		Autodrom f = new Autodrom(7, 7, 100);
 		
 		FastCarFactory fcf = new FastCarFactory();
 		
@@ -94,7 +94,7 @@ public class Test {
 	}
 	
 	public static void test3() {
-		Autodrom f = new Autodrom(9, 9);
+		Autodrom f = new Autodrom(9, 9, 100);
 		
 		FastCarFactory fcf = new FastCarFactory();
 		

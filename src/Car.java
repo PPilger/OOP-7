@@ -3,9 +3,6 @@ public abstract class Car extends Thread {
 	private Points points;
 	private Strategy<? extends Move> strategy;
 	private int waitms;
-
-	// maximum amount of moves
-	private int maxPath = 100;
 	private int movedCnt = 0;
 
 	public Car(String name, DrivingArea area,
@@ -20,14 +17,14 @@ public abstract class Car extends Thread {
 	@Override
 	public void run() {
 		try {
-			while (movedCnt < maxPath) {
+			for(;;) {
 				Move move = strategy.nextMove();
 
 				area.update(this, move);
 
 				movedCnt++;
 
-				if (movedCnt >= maxPath) {
+				if (movedCnt >= area.getMaxMoves()) {
 					synchronized (area) {
 						// check for interrupt to prevent multiple program exits
 						if (Thread.interrupted()) {

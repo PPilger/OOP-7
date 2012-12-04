@@ -5,11 +5,13 @@ public class DrivingArea extends ThreadGroup {
 	private Map<Car, CarPosition> positions = new Hashtable<Car, CarPosition>(); // synchronized
 	private int width;
 	private int height;
+	private int maxMoves;
 
-	public DrivingArea(int width, int height) {
+	public DrivingArea(int width, int height, int maxMoves) {
 		super("Cars");
 		this.width = width;
 		this.height = height;
+		this.maxMoves = maxMoves;
 
 		cells = new ArrayList<List<Set<Car>>>();
 		for (int i = 0; i < height; i++) {
@@ -25,6 +27,10 @@ public class DrivingArea extends ThreadGroup {
 
 	private Set<Car> carsAt(Point point) {
 		return cells.get(point.getY()).get(point.getX());
+	}
+	
+	public int getMaxMoves() {
+		return maxMoves;
 	}
 
 	public boolean add(Car car, CarPosition pos) {
