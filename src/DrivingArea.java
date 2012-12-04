@@ -1,7 +1,6 @@
 import java.util.*;
 
 public class DrivingArea extends ThreadGroup {
-	// private Map<Point, Set<Car>> usedCells = new HashMap<Point, Set<Car>>();
 	private List<List<Set<Car>>> cells;
 	private Map<Car, CarPosition> positions = new Hashtable<Car, CarPosition>(); // synchronized
 	private int width;
@@ -30,21 +29,13 @@ public class DrivingArea extends ThreadGroup {
 
 	public boolean add(Car car, CarPosition pos) {
 		Set<Car> set;
-		Point point;
 
 		if (positions.containsKey(pos)) {
 			return false;
 		}
 
-		point = pos.getPoint();
-
-		set = carsAt(point);
-		// if (usedCells.containsKey(point)) {
-		// set = usedCells.get(point);
-		// } else {
-		// set = new HashSet<Car>();
-		// usedCells.put(point, set);
-		// }
+		set = carsAt(pos.getPoint());
+		
 		synchronized (set) {
 			set.add(car);
 		}
@@ -83,43 +74,6 @@ public class DrivingArea extends ThreadGroup {
 		}
 
 		positions.put(car, newPos);
-
-		// synchronized (this) {
-		// Set<Car> tmp;
-
-		// check if thread was interrupted before manipulating
-		// if(Thread.interrupted()) {
-		// throw new InterruptedException();
-		// }
-
-		// delete old entry
-		// tmp = usedCells.get(oldPoint);
-
-		// tmp.remove(car);
-		// if (tmp.isEmpty()) {
-		// usedCells.remove(oldPoint);
-		// }
-
-		// insert new entry
-		// if (usedCells.containsKey(newPoint)) {
-		// tmp = usedCells.get(newPoint);
-
-		// handle collisions
-		// for (Car other : tmp) {
-		// CarPosition posOther = positions.get(other);
-		// onHit.onHit(car, newPos.getOrientation(), other,
-		// posOther.getOrientation());
-		// }
-		// } else {
-		// tmp = new HashSet<Car>();
-		// usedCells.put(newPoint, tmp);
-		// }
-
-		// tmp.add(car);
-		// positions.put(car, newPos);
-		// }
-		
-		System.out.println(this);
 	}
 
 	/**
@@ -159,26 +113,23 @@ public class DrivingArea extends ThreadGroup {
 		return new Point(x, y);
 	}
 	
-	private static int[][] counter;
-	
 	public String toString() {
 		//return positions.toString();
 		StringBuilder sb = new StringBuilder();
+		Iterator<Car> iter = positions.keySet().iterator();
 		
-		if(counter == null) {
-			counter = new int[height][width];
+		if(iter.hasNext()) {
+			Car car = iter.next();
+			Point p = positions.get(car).getPoint();
+			
+			sb.append(car.getName() + ": " + p);
 		}
 		
-		for(CarPosition pos : positions.values()) {
-			Point p = pos.getPoint();
-			counter[p.getY()][p.getX()]++;
-		}
-		
-		for(int i = 0; i < height; i++) {
-			for(int j = 0; j < width; j++) {
-				sb.append(counter[i][j]);
-			}
-			sb.append('\n');
+		while(iter.hasNext()) {
+			Car car = iter.next();
+			Point p = positions.get(car).getPoint();
+			
+			sb.append(", " + car.getName() + ": " + p);
 		}
 		
 		return sb.toString();
