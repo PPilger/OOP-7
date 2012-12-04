@@ -1,3 +1,11 @@
+/**
+ * Represents the movement strategy for a car.
+ * 
+ * @author Peter Pilgerstorfer
+ * 
+ * @param <P>
+ *            specifies the supported moves of the strategy.
+ */
 public interface Strategy<P extends Move> {
 
 	/**

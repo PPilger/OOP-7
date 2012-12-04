@@ -1,8 +1,7 @@
 /**
- * Creates new FlexibleCars with given params
+ * A CarFactory to create FlexibleCars on a DrivingArea.
  * 
  * @author VHD
- * 
  */
 public class FlexibleCarFactory implements CarFactory {
 	private String name;
@@ -37,10 +36,14 @@ public class FlexibleCarFactory implements CarFactory {
 		this.waitms = waitms;
 	}
 
-	@Override
 	/**
-	 * Adds new flexibleCar to the given Driving Area
+	 * Returns a new FlexibleCar with the current values (name, strategy,
+	 * waitms) on the specified DrivingArea.
+	 * 
+	 * The car is also added to the specified DrivingArea at the current
+	 * position.
 	 */
+	@Override
 	public FlexibleCar create(DrivingArea area) {
 		FlexibleCar car = new FlexibleCar(name, area, strategy, waitms);
 		area.add(car, pos);

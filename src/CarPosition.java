@@ -1,9 +1,7 @@
 /**
- * Stores a car's position (2D) and orientation. Orientation is stored clockwise
- * (0 = North, 1 = East, 2 = South, 3 = West)
+ * Stores a car's position and orientation.
  * 
  * @author gsi-test
- * 
  */
 public class CarPosition {
 	private Point point;
@@ -12,22 +10,23 @@ public class CarPosition {
 	/**
 	 * Copy constructor (deep copy)
 	 * 
-	 * @param pos
-	 *            original CarPosition must not be NULL
+	 * @param original
+	 *            must not be NULL
 	 */
-	public CarPosition(CarPosition pos) {
-		this.point = new Point(pos.getPoint().getX(), pos.getPoint().getY());
-		this.ori = pos.getOrientation();
+	public CarPosition(CarPosition original) {
+		this.point = new Point(original.getPoint().getX(), original.getPoint()
+				.getY());
+		this.ori = original.getOrientation();
 	}
 
 	/**
-	 * @param pt
-	 *            Point must not be null
+	 * @param point
+	 *            must not be null
 	 * @param ori
-	 *            Orientation must not be null
+	 *            must not be null
 	 */
-	public CarPosition(Point pt, Orientation ori) {
-		this.point = pt;
+	public CarPosition(Point point, Orientation ori) {
+		this.point = point;
 		this.ori = ori;
 	}
 
@@ -35,12 +34,6 @@ public class CarPosition {
 		return point;
 	}
 
-	/**
-	 * Returns the Orientation
-	 * 
-	 * @return stored Orientation, Value from 0 to 3 (0 = North, 1 = East, 2 =
-	 *         South, 3 = West)
-	 */
 	public Orientation getOrientation() {
 		return ori;
 	}

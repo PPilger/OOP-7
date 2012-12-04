@@ -1,5 +1,5 @@
 /**
- * Creates new FastCars with given params
+ * A CarFactory to create FastCars on a DrivingArea.
  * 
  * @author VHD
  * 
@@ -37,10 +37,14 @@ public class FastCarFactory implements CarFactory {
 		this.waitms = waitms;
 	}
 
-	@Override
 	/**
-	 * Adds new FastCar to the given Driving Area
+	 * Returns a new FastCar with the current values (name, strategy, waitms) on
+	 * the specified DrivingArea.
+	 * 
+	 * The car is also added to the specified DrivingArea at the current
+	 * position.
 	 */
+	@Override
 	public FastCar create(DrivingArea area) {
 		FastCar car = new FastCar(name, area, strategy, waitms);
 		area.add(car, pos);

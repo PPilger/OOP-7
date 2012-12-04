@@ -20,7 +20,8 @@ public enum Orientation {
 	}
 
 	/**
-	 * Rotates the orientation by 90*amount degrees clockwise.
+	 * Returns the rotated orientation. The rotation is performed by 90*amount
+	 * degrees clockwise.
 	 */
 	public Orientation rotate(int amount) {
 		int newValue = (value + amount) % 4;

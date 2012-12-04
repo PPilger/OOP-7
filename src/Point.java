@@ -15,6 +15,10 @@ public class Point implements Comparable<Point> {
 		return y;
 	}
 
+	/**
+	 * Returns a new point. The new point is this point moved in the specified
+	 * direction.
+	 */
 	public Point move(Orientation ori) {
 		return new Point(x + ori.dx(), y + ori.dy());
 	}
@@ -44,6 +48,9 @@ public class Point implements Comparable<Point> {
 		return true;
 	}
 
+	/**
+	 * Compares a point by its y and (if equal) by its x value.
+	 */
 	@Override
 	public int compareTo(Point o) {
 		if (y < o.y) {
