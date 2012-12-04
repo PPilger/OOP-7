@@ -7,7 +7,7 @@ import java.util.List;
  */
 public abstract class RepeatedStrategy<P extends Move> implements Strategy<P> {
 	private List<P> moves;
-	private int pos = 0;
+	private int last;
 
 	/**
 	 * Creates a new strategy that returns the specified moves repeatedly.
@@ -17,13 +17,14 @@ public abstract class RepeatedStrategy<P extends Move> implements Strategy<P> {
 	 */
 	public RepeatedStrategy(List<P> moves) {
 		this.moves = moves;
+		this.last = moves.size() - 1;
 	}
 
 	/**
 	 * Returns the next move according to the strategy.
 	 */
 	public P nextMove() {
-		pos = (pos + 1) % moves.size();
-		return moves.get(pos);
+		last = (last + 1) % moves.size();
+		return moves.get(last);
 	}
 }

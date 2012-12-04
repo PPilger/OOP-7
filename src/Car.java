@@ -17,7 +17,8 @@ public abstract class Car extends Thread {
 	@Override
 	public void run() {
 		try {
-			for(;;) {
+			// The Thread runs until it is interrupted
+			for (;;) {
 				Move move = strategy.nextMove();
 
 				area.update(this, move);
@@ -50,58 +51,54 @@ public abstract class Car extends Thread {
 	public void hit(Orientation thisOri, Car other, Orientation otherOri)
 			throws InterruptedException {
 
-		if (otherOri == thisOri.rotate(2)) {
-			// frontal crash => bonus point for attacker
-
-			// only one car can increase its points at any time
-			synchronized (area) {
-				// check for interrupt to prevent multiple program
-				// exits, especially more than one winning car
-				if (Thread.interrupted()) {
-					throw new InterruptedException();
-				}
-
-				System.out.println(this + " trifft " + other + " frontal.");
-
-				this.points.inc(2);
+		if (otherOri == thisOri.rotate(2)) { // frontal crash
+			synchronized (this.points) {
+				frontalHit(other);
 			}
 		} else {
-			// non frontal crash => minus point for defender
-
+			// lock the two point objects in a static order to prevent deadlocks
 			if (this.getId() < other.getId()) {
 				synchronized (this.points) {
 					synchronized (other.points) {
-						// check for interrupt to prevent a possible
-						// manipulation of
-						// the winning Car
-						if (Thread.interrupted()) {
-							throw new InterruptedException();
-						}
-
-						System.out.println(this + " trifft " + other);
-
-						other.points.dec(1);
-						this.points.inc(1);
+						normalHit(other);
 					}
 				}
 			} else {
 				synchronized (other.points) {
 					synchronized (this.points) {
-						// check for interrupt to prevent a possible
-						// manipulation of
-						// the winning Car
-						if (Thread.interrupted()) {
-							throw new InterruptedException();
-						}
-
-						System.out.println(this + " trifft " + other);
-
-						other.points.dec(1);
-						this.points.inc(1);
+						normalHit(other);
 					}
 				}
 			}
 		}
+	}
+
+	private void frontalHit(Car other) throws InterruptedException {
+		// only one car can increase its points at a time
+		synchronized (area) {
+			// check for interrupt to prevent multiple program
+			// exits, especially more than one winning car
+			if (Thread.interrupted()) {
+				throw new InterruptedException();
+			}
+
+			System.out.println(this + " trifft " + other + " frontal.");
+
+			this.points.inc(2);
+		}
+	}
+
+	private void normalHit(Car other) throws InterruptedException {
+		// check for interrupt to prevent a possible
+		// manipulation of the winning Car
+		if (Thread.interrupted()) {
+			throw new InterruptedException();
+		}
+
+		System.out.println(this + " trifft " + other);
+
+		other.points.dec(1);
+		this.points.inc(1);
 	}
 
 	@Override
@@ -116,20 +113,14 @@ public abstract class Car extends Thread {
 		return sb.toString();
 	}
 
-	// /**
-	// * Represents the points of a car. Points also checks if the point-limit
-	// is
-	// * reached. In this case all Cars on the DrivingArea are interrupted.
-	// *
-	// * This class is synchronized:
-	// *
-	// * 1) Only one Thread can manipulate the points at a time.
-	// *
-	// * 2) Locks the DrivingArea before an increment to prevent multiple
-	// * terminations (e.g. two winners)
-	// *
-	// * @author Peter Pilgerstorfer
-	// */
+	/**
+	 * Represents the points of a car. Points also checks if the point-limit is
+	 * reached. In this case all Cars on the DrivingArea are interrupted.
+	 * 
+	 * This class is not synchronized.
+	 * 
+	 * @author Peter Pilgerstorfer
+	 */
 	private class Points {
 		private int value = 0;
 
@@ -144,12 +135,21 @@ public abstract class Car extends Thread {
 				area.interrupt();
 
 				// The current thread is interrupted and will be
-				// terminated at the next sleep or interrupt-check
+				// terminated at the next sleep or interrupt-check:
+				// - move was finished before interrupt => terminate after
+				// counting the current move (e.g. sleep)
+				// - move couldn't be finished before interrupt => terminate
+				// before current move is counted (next call to hit terminates
+				// at interrupt-check)
 			}
 		}
 
 		private void dec(int amount) {
 			value -= amount;
+
+			if (value < 0) {
+				value = 0;
+			}
 		}
 
 		@Override

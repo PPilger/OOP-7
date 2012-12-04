@@ -30,24 +30,9 @@ public class Autodrom {
 				c.join();
 			}
 
-			System.out.print("Runde fertig ;-)");
+			System.out.println("Runde fertig ;-)");
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-
-		// boolean finished = false;
-		//
-		// while (!finished) {
-		//
-		// finished = true;
-		// for (Car c : cars) {
-		// if (c.isAlive()) {
-		// finished = false;
-		// break;
-		// }
-		// }
-		// }
-
-		// System.out.print("Runde Fertig ;-)");
 	}
 }

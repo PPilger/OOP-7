@@ -28,20 +28,27 @@ public class DrivingArea extends ThreadGroup {
 	private Set<Car> carsAt(Point point) {
 		return cells.get(point.getY()).get(point.getX());
 	}
-	
+
 	public int getMaxMoves() {
 		return maxMoves;
 	}
 
 	public boolean add(Car car, CarPosition pos) {
 		Set<Car> set;
+		Point point = pos.getPoint();
+		int x = point.getX();
+		int y = point.getY();
+
+		if (x < 0 || x >= width || y < 0 || y >= height) {
+			return false;
+		}
 
 		if (positions.containsKey(pos)) {
 			return false;
 		}
 
-		set = carsAt(pos.getPoint());
-		
+		set = carsAt(point);
+
 		synchronized (set) {
 			set.add(car);
 		}
@@ -111,33 +118,33 @@ public class DrivingArea extends ThreadGroup {
 		int y = pos.getY();
 
 		x = Math.max(x, 0);
-		x = Math.min(x, width-1);
+		x = Math.min(x, width - 1);
 
 		y = Math.max(y, 0);
-		y = Math.min(y, height-1);
+		y = Math.min(y, height - 1);
 
 		return new Point(x, y);
 	}
-	
+
 	public String toString() {
-		//return positions.toString();
+		// return positions.toString();
 		StringBuilder sb = new StringBuilder();
 		Iterator<Car> iter = positions.keySet().iterator();
-		
-		if(iter.hasNext()) {
+
+		if (iter.hasNext()) {
 			Car car = iter.next();
 			Point p = positions.get(car).getPoint();
-			
+
 			sb.append(car.getName() + ": " + p);
 		}
-		
-		while(iter.hasNext()) {
+
+		while (iter.hasNext()) {
 			Car car = iter.next();
 			Point p = positions.get(car).getPoint();
-			
+
 			sb.append(", " + car.getName() + ": " + p);
 		}
-		
+
 		return sb.toString();
 	}
 }
