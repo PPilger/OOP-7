@@ -7,7 +7,7 @@
  */
 public class CarPosition {
 	private Point point;
-	private int ori;
+	private Orientation ori;
 
 	/**
 	 * Copy constructor (deep copy)
@@ -22,15 +22,13 @@ public class CarPosition {
 
 	/**
 	 * @param pt
-	 *            Point must not be NULL
+	 *            Point must not be null
 	 * @param ori
-	 *            Orientation should be between 0 and 3 (0 = North, 1 = East, 2
-	 *            = South, 3 = West)
+	 *            Orientation must not be null
 	 */
-	public CarPosition(Point pt, int ori) {
+	public CarPosition(Point pt, Orientation ori) {
 		this.point = pt;
-		// Orientation must be between 0 and 3
-		this.ori = ori % 4;
+		this.ori = ori;
 	}
 
 	public Point getPoint() {
@@ -43,7 +41,7 @@ public class CarPosition {
 	 * @return stored Orientation, Value from 0 to 3 (0 = North, 1 = East, 2 =
 	 *         South, 3 = West)
 	 */
-	public int getOrientation() {
+	public Orientation getOrientation() {
 		return ori;
 	}
 

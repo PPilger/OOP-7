@@ -15,16 +15,8 @@ public class Point implements Comparable<Point> {
 		return y;
 	}
 
-	public Point move(int ori) {
-		if (ori == 0) {
-			return new Point(x, y + 1);
-		} else if (ori == 1) {
-			return new Point(x + 1, y);
-		} else if (ori == 2) {
-			return new Point(x, y - 1);
-		} else {
-			return new Point(x - 1, y);
-		}
+	public Point move(Orientation ori) {
+		return new Point(x + ori.dx(), y + ori.dy());
 	}
 
 	@Override

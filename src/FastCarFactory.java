@@ -12,11 +12,11 @@ public class FastCarFactory implements CarFactory {
 
 	/**
 	 * Creates a new CarFactory with default values: name="FastCar",
-	 * position=(0/0), orientation=0, strategy=FastRandomStrategy, waitms=10
+	 * position=(0/0), orientation=North, strategy=FastRandomStrategy, waitms=10
 	 */
 	public FastCarFactory() {
 		this.name = "FastCar";
-		this.pos = new CarPosition(new Point(0, 0), 0);
+		this.pos = new CarPosition(new Point(0, 0), Orientation.North);
 		this.strategy = new FastRandomStrategy();
 		this.waitms = 10;
 	}

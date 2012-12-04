@@ -12,15 +12,15 @@ public class FlexibleCarFactory implements CarFactory {
 
 	/**
 	 * Creates a new CarFactory with default values: name="FlexibleCar",
-	 * position=(0/0), orientation=0, strategy=FastRandomStrategy, waitms=20
+	 * position=(0/0), orientation=North, strategy=FastRandomStrategy, waitms=20
 	 */
 	public FlexibleCarFactory() {
 		this.name = "FlexibleCar";
-		this.pos = new CarPosition(new Point(0, 0), 0);
+		this.pos = new CarPosition(new Point(0, 0), Orientation.North);
 		this.strategy = new FastRandomStrategy();
 		this.waitms = 20;
 	}
-	
+
 	public void setName(String name) {
 		this.name = name;
 	}

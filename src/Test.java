@@ -12,6 +12,7 @@ public class Test {
 		
 		fcf.setName("FastCar1");
 		fcf.setPos(new CarPosition(new Point(10, 10), 1));
+		fcf.setStrategy(new E(5));
 		f.addCar(fcf);
 		
 //		fcf.setName("FastCar2");

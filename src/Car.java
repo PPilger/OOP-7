@@ -50,10 +50,10 @@ public abstract class Car extends Thread {
 		}
 	}
 
-	public void hit(int thisOri, Car other, int otherOri)
+	public void hit(Orientation thisOri, Car other, Orientation otherOri)
 			throws InterruptedException {
 
-		if (otherOri == (thisOri + 2) % 4) {
+		if (otherOri == thisOri.rotate(2)) {
 			// frontal crash => bonus point for attacker
 
 			// only one car can increase its points at any time
@@ -71,15 +71,16 @@ public abstract class Car extends Thread {
 		} else {
 			// non frontal crash => minus point for defender
 
-			if(this.getId() < other.getId()) {
+			if (this.getId() < other.getId()) {
 				synchronized (this.points) {
 					synchronized (other.points) {
-						// check for interrupt to prevent a possible manipulation of
+						// check for interrupt to prevent a possible
+						// manipulation of
 						// the winning Car
 						if (Thread.interrupted()) {
 							throw new InterruptedException();
 						}
-						
+
 						System.out.println(this + " trifft " + other);
 
 						other.points.dec(1);
@@ -89,12 +90,13 @@ public abstract class Car extends Thread {
 			} else {
 				synchronized (other.points) {
 					synchronized (this.points) {
-						// check for interrupt to prevent a possible manipulation of
+						// check for interrupt to prevent a possible
+						// manipulation of
 						// the winning Car
 						if (Thread.interrupted()) {
 							throw new InterruptedException();
 						}
-						
+
 						System.out.println(this + " trifft " + other);
 
 						other.points.dec(1);
@@ -117,19 +119,20 @@ public abstract class Car extends Thread {
 		return sb.toString();
 	}
 
-//	/**
-//	 * Represents the points of a car. Points also checks if the point-limit is
-//	 * reached. In this case all Cars on the DrivingArea are interrupted.
-//	 * 
-//	 * This class is synchronized:
-//	 * 
-//	 * 1) Only one Thread can manipulate the points at a time.
-//	 * 
-//	 * 2) Locks the DrivingArea before an increment to prevent multiple
-//	 * terminations (e.g. two winners)
-//	 * 
-//	 * @author Peter Pilgerstorfer
-//	 */
+	// /**
+	// * Represents the points of a car. Points also checks if the point-limit
+	// is
+	// * reached. In this case all Cars on the DrivingArea are interrupted.
+	// *
+	// * This class is synchronized:
+	// *
+	// * 1) Only one Thread can manipulate the points at a time.
+	// *
+	// * 2) Locks the DrivingArea before an increment to prevent multiple
+	// * terminations (e.g. two winners)
+	// *
+	// * @author Peter Pilgerstorfer
+	// */
 	private class Points {
 		private int value = 0;
 
