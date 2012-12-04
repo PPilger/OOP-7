@@ -1,10 +1,30 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Set;
 
+/**
+ * Represents the area where cars drive on. It is used as a ThreadGroup for the
+ * cars (Threads).
+ * 
+ * The class is synchonized.
+ * 
+ * @author Peter Pilgerstorfer
+ */
 public class DrivingArea extends ThreadGroup {
+	// Stores rows of cells.
+	// Every cell contains the Cars currently located on this position.
+	// manually synchronized
 	private List<List<Set<Car>>> cells;
-	private Map<Car, CarPosition> positions = new Hashtable<Car, CarPosition>(); // synchronized
+
+	// Stores the positions of each car.
+	// automatically synchronized (Hashtable)
+	private Hashtable<Car, CarPosition> positions = new Hashtable<Car, CarPosition>();
+
 	private int width;
 	private int height;
+
 	private int maxMoves;
 
 	public DrivingArea(int width, int height, int maxMoves) {
@@ -13,7 +33,7 @@ public class DrivingArea extends ThreadGroup {
 		this.height = height;
 		this.maxMoves = maxMoves;
 
-		cells = new ArrayList<List<Set<Car>>>();
+		this.cells = new ArrayList<List<Set<Car>>>();
 		for (int i = 0; i < height; i++) {
 			List<Set<Car>> row = new ArrayList<Set<Car>>();
 
@@ -21,7 +41,7 @@ public class DrivingArea extends ThreadGroup {
 				row.add(new HashSet<Car>());
 			}
 
-			cells.add(row);
+			this.cells.add(row);
 		}
 	}
 
@@ -33,33 +53,54 @@ public class DrivingArea extends ThreadGroup {
 		return maxMoves;
 	}
 
+	/**
+	 * Sets the specified car to the specified position.
+	 * 
+	 * If the position is invalid or the car is already on the driving area,
+	 * false is returned. Otherwise true is returned.
+	 * 
+	 * Synchronization: The modified cell in cells is locked during
+	 * modification.
+	 */
 	public boolean add(Car car, CarPosition pos) {
-		Set<Car> set;
 		Point point = pos.getPoint();
 		int x = point.getX();
 		int y = point.getY();
+		Set<Car> set;
 
 		if (x < 0 || x >= width || y < 0 || y >= height) {
 			return false;
 		}
 
-		if (positions.containsKey(pos)) {
+		if (positions.containsKey(car)) {
 			return false;
 		}
 
 		set = carsAt(point);
 
+		// lock set during modification
 		synchronized (set) {
 			set.add(car);
 		}
 
-		// positions is synchronized
 		positions.put(car, pos);
 
 		return true;
 	}
 
-	public void update(Car car, Move move) throws InterruptedException {
+	/**
+	 * Moves the car with the specified move.
+	 * 
+	 * The car was added to this DrivingArea before the call to update.
+	 * 
+	 * Neither car nor move are null.
+	 * 
+	 * Synchronization: The origin-cell and the target-cell in cells are both
+	 * locked during the modifications. The two locks are acquired in a well
+	 * defined order to prevent deadlocks. The lower cell is locked before the
+	 * greater one using Point.compareTo (compare cell-indices).
+	 */
+	protected void update(Car car, Move move) throws InterruptedException {
 		CarPosition oldPos = positions.get(car);
 		CarPosition newPos = move.nextPos(oldPos);
 		Point oldPoint = oldPos.getPoint();
@@ -90,6 +131,8 @@ public class DrivingArea extends ThreadGroup {
 	}
 
 	/**
+	 * Moves car from oldCell to newCell.
+	 * 
 	 * oldCell and newCell have to be locked by a synchronized statement.
 	 */
 	private void update(Set<Car> oldCell, Set<Car> newCell, Car car,
@@ -105,13 +148,10 @@ public class DrivingArea extends ThreadGroup {
 	}
 
 	/**
-	 * Returns a valid Point which is part of this DrivingArea
+	 * Returns a valid point. A valid point is within the driving area.
 	 * 
-	 * @param pos
-	 *            Any Point which will be checked whether it's placeable within
-	 *            the area's boundary.
-	 * @return The point as given as param, when it's valid. Else any valid
-	 *         Point next to the boundary will be returned.
+	 * @return The point as given as param if valid or the next valid point
+	 *         otherwise.
 	 */
 	private Point fixPoint(Point pos) {
 		int x = pos.getX();
@@ -124,27 +164,5 @@ public class DrivingArea extends ThreadGroup {
 		y = Math.min(y, height - 1);
 
 		return new Point(x, y);
-	}
-
-	public String toString() {
-		// return positions.toString();
-		StringBuilder sb = new StringBuilder();
-		Iterator<Car> iter = positions.keySet().iterator();
-
-		if (iter.hasNext()) {
-			Car car = iter.next();
-			Point p = positions.get(car).getPoint();
-
-			sb.append(car.getName() + ": " + p);
-		}
-
-		while (iter.hasNext()) {
-			Car car = iter.next();
-			Point p = positions.get(car).getPoint();
-
-			sb.append(", " + car.getName() + ": " + p);
-		}
-
-		return sb.toString();
 	}
 }

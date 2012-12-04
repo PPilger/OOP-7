@@ -1,9 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Stellt ein Autodrom dar.
- */
 public class Autodrom {
 	private List<Car> cars = new ArrayList<Car>();
 	private DrivingArea area;
@@ -12,13 +9,16 @@ public class Autodrom {
 		this.area = new DrivingArea(width, height, maxMoves);
 	}
 
+	/**
+	 * Creates one car from the specified factory and adds it to the Autodrom.
+	 */
 	public void addCar(CarFactory factory) {
 		Car car = factory.create(area);
 		cars.add(car);
 	}
 
 	/**
-	 * Blockiert bis die Runde beendet wurde.
+	 * Starts all cars and blocks until they are finished.
 	 */
 	public void start() {
 		for (Car c : cars) {
