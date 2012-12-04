@@ -8,7 +8,7 @@ import java.util.Set;
  * Represents the area where cars drive on. It is used as a ThreadGroup for the
  * cars (Threads).
  * 
- * The class is synchonized.
+ * The all non-private methods are synchonized.
  * 
  * @author Peter Pilgerstorfer
  */

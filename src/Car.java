@@ -1,15 +1,34 @@
+/**
+ * Represents a Car on a driving area.
+ * 
+ * @author Peter Pilgerstorfer
+ */
 public abstract class Car extends Thread {
+	// Synchronisation strategy:
+	// Every manipulation of score has to be synchronized to prevent
+	// manipulating a winning car (score is accessed by multiple cars).
+
+	// Termination strategy:
+	// Before a possible termination, lock the DrivingArea (area) and check for
+	// interrupts to prevent multiple terminations.
+	// Termination is done by interrupting all Cars of the DrivingArea.
+	//
+	// After interrupting, the Thread must not be stopped explicitly. The
+	// interrupt will take effect at the next interrupt check (before the next
+	// manipulation) or after the end of the move (at sleep).
+	// Reason: if the car wins, the move is counted as finished.
+
 	private DrivingArea area;
-	private Points points;
+	private Score score;
 	private Strategy<? extends Move> strategy;
 	private int waitms;
-	private int movedCnt = 0;
+	private int movedCnt = 0; // number of completed moves so far
 
 	public Car(String name, DrivingArea area,
 			Strategy<? extends Move> strategy, int waitms) {
 		super(area, name);
 		this.area = area;
-		this.points = new Points();
+		this.score = new Score();
 		this.strategy = strategy;
 		this.waitms = waitms;
 	}
@@ -17,7 +36,7 @@ public abstract class Car extends Thread {
 	@Override
 	public void run() {
 		try {
-			// The Thread runs until it is interrupted
+			// The Thread runs until it is interrupted.
 			for (;;) {
 				Move move = strategy.nextMove();
 
@@ -26,7 +45,10 @@ public abstract class Car extends Thread {
 				movedCnt++;
 
 				if (movedCnt >= area.getMaxMoves()) {
+
+					// follow the termination strategy:
 					synchronized (area) {
+
 						// check for interrupt to prevent multiple program exits
 						if (Thread.interrupted()) {
 							throw new InterruptedException();
@@ -38,6 +60,8 @@ public abstract class Car extends Thread {
 
 						// stop all cars
 						area.interrupt();
+
+						// no termination due to termination strategy
 					}
 				}
 
@@ -52,20 +76,24 @@ public abstract class Car extends Thread {
 			throws InterruptedException {
 
 		if (otherOri == thisOri.rotate(2)) { // frontal crash
-			synchronized (this.points) {
+			// frontalHit manipulates this.score
+			synchronized (this.score) {
 				frontalHit(other);
 			}
 		} else {
-			// lock the two point objects in a static order to prevent deadlocks
+			// normalHit manipulates both scores
+
+			// lock the two score objects in a well defined order to prevent
+			// deadlocks
 			if (this.getId() < other.getId()) {
-				synchronized (this.points) {
-					synchronized (other.points) {
+				synchronized (this.score) {
+					synchronized (other.score) {
 						normalHit(other);
 					}
 				}
 			} else {
-				synchronized (other.points) {
-					synchronized (this.points) {
+				synchronized (other.score) {
+					synchronized (this.score) {
 						normalHit(other);
 					}
 				}
@@ -73,32 +101,48 @@ public abstract class Car extends Thread {
 		}
 	}
 
+	/**
+	 * Has to be called with a lock on the score of this car
+	 */
 	private void frontalHit(Car other) throws InterruptedException {
-		// only one car can increase its points at a time
+
+		// follow the termination strategy:
+		// (the car might win this game by incrementing the score)
 		synchronized (area) {
-			// check for interrupt to prevent multiple program
-			// exits, especially more than one winning car
+
+			// check for interrupt to prevent multiple program exits
 			if (Thread.interrupted()) {
 				throw new InterruptedException();
 			}
 
 			System.out.println(this + " trifft " + other + " frontal.");
 
-			this.points.inc(2);
+			// 1 Point + 1 Bonuspoint for the attacker
+			this.score.inc(2);
 		}
 	}
 
+	/**
+	 * Has to be called with a lock on the score of this and the other car
+	 */
 	private void normalHit(Car other) throws InterruptedException {
-		// check for interrupt to prevent a possible
-		// manipulation of the winning Car
-		if (Thread.interrupted()) {
-			throw new InterruptedException();
+
+		// follow the termination strategy:
+		// (the car might win this game by incrementing the score)
+		synchronized (area) {
+
+			// check for interrupt to prevent multiple program exits
+			// and to prevent a possible manipulation of the winning Car
+			if (Thread.interrupted()) {
+				throw new InterruptedException();
+			}
+
+			System.out.println(this + " trifft " + other);
+
+			// 1 Point for the attacker, -1 Point for the defender
+			other.score.dec(1);
+			this.score.inc(1);
 		}
-
-		System.out.println(this + " trifft " + other);
-
-		other.points.dec(1);
-		this.points.inc(1);
 	}
 
 	@Override
@@ -108,7 +152,7 @@ public abstract class Car extends Thread {
 		sb.append(" (");
 		sb.append(this.movedCnt);
 		sb.append(" moves, ");
-		sb.append(this.points);
+		sb.append(this.score);
 		sb.append(" points)");
 		return sb.toString();
 	}
@@ -121,9 +165,16 @@ public abstract class Car extends Thread {
 	 * 
 	 * @author Peter Pilgerstorfer
 	 */
-	private class Points {
+	private class Score {
 		private int value = 0;
 
+		/**
+		 * Has to be called with a lock on this score.
+		 * 
+		 * This method terminates the game if the score-limit is reached. As a
+		 * result, the termination strategy has to be applied for calling this
+		 * method.
+		 */
 		private void inc(int amount) {
 			value += amount;
 
@@ -134,16 +185,13 @@ public abstract class Car extends Thread {
 				// stop all cars
 				area.interrupt();
 
-				// The current thread is interrupted and will be
-				// terminated at the next sleep or interrupt-check:
-				// - move was finished before interrupt => terminate after
-				// counting the current move (e.g. sleep)
-				// - move couldn't be finished before interrupt => terminate
-				// before current move is counted (next call to hit terminates
-				// at interrupt-check)
+				// no termination due to termination strategy
 			}
 		}
 
+		/**
+		 * Has to be called with a lock on this score
+		 */
 		private void dec(int amount) {
 			value -= amount;
 
