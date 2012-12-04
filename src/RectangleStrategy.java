@@ -9,8 +9,11 @@ import java.util.List;
 public class RectangleStrategy extends RepeatedStrategy<FlexibleMove> {
 
 	/**
-	 * Creates a new strategy where the car goes in a (width+2 x height+2) rectangle.
-	 * The car starts along the width-side  and turns left in each corner.
+	 * Creates a new strategy where the car goes in a (width+2 x height+2)
+	 * rectangle. The car starts along the width-side and turns left in each
+	 * corner.
+	 * 
+	 * width and height have to be >= 0.
 	 */
 	public RectangleStrategy(int width, int height) {
 		super(RectangleStrategy.moves(width, height));

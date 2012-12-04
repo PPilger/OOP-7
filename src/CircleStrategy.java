@@ -12,7 +12,7 @@ public class CircleStrategy extends RepeatedStrategy<FastMove> {
 	 * with the ForwardMoves.
 	 * 
 	 * @param size
-	 *            defines the size of the circle (0 ... smallest circle)
+	 *            defines the size of the circle; size has to be >= 0
 	 */
 	public CircleStrategy(int size) {
 		super(CircleStrategy.moves(size));

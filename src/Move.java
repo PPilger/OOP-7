@@ -1,10 +1,16 @@
 /**
- * Returns new 3D position of Car, after moving a given one by the specified
- * implemented class
+ * Represents a move of a car.
  * 
  * @author gsi-test
  * 
  */
 public interface Move {
-	public CarPosition nextPos(CarPosition cp);
+
+	/**
+	 * Returns a new CarPosition containing the new point and orientation.
+	 * 
+	 * @param pos
+	 *            the car position; has to be >= 0
+	 */
+	public CarPosition nextPos(CarPosition pos);
 }
